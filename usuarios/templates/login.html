@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+        
+            font-family: Arial, sans-serif;
+            background-color: #2d3560;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            transform: scale(1.2);
+            
+            /* Aumenta o zoom em 1.5 vezes */
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 110%; /* Altere o valor da largura conforme necessário */
+            max-width: 250px; /* Defina uma largura máxima para diminuir os inputs */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px; /* Adiciona espaço acima do botão */
+            margin-bottom: 10px; /* Adiciona espaço abaixo do botão */
+            background-color: #2b67a2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #202da4;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+        }
+        .custom-submit {
+            background-color: #66b3df;
+            transition: background-color 0.3s ease;
+        }
+        .custom-submit:hover {
+            background-color: #45a0b3;
+        }
+        .error-message {
+            color: rgb(234, 95, 95);
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px; /* Adiciona espaço abaixo do grupo de campos */
+        }
+        .error-group {
+            position: relative;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2d3560;
+            padding: 10px;
+            text-align: center;
+            font-size: 15px;
+            color: #ffffff;
+        }
+        .error-group::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: rgb(227, 0, 0);
+        }
+        .error-group .error-message {
+            position: absolute;
+            bottom: -120px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+        .show-password-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .show-password-link {
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .show-password-link:hover {
+            color: #666;
+        }
+    </style>
+    <script>
+    // Função para ocultar a mensagem de erro após 5 segundos
+    window.addEventListener('DOMContentLoaded', (event) => {
+        setTimeout(function() {
+            var errorMessage = document.querySelector('.error-message');
+            errorMessage.style.display = 'none';
+        }, 5000);
+    });
+</script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png" alt="Logo da Empresa">
+        </div>
+        <h1>Login de Usuário</h1>
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group {% if error_message %}error-group{% endif %}">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group {% if error_message %}error-group{% endif %}">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required>
+                {% if error_message %}
+                <p class="error-message">{{ error_message }}</p>
+                {% endif %}
+            </div>
+            <div class="show-password-container">
+                <a class="show-password-link" onclick="togglePasswordVisibility()">Mostrar Senha</a>
+            </div>
+            <input type="submit" value="Entrar" class="custom-submit">
+        </form>
+    </div>
+    <footer>
+        <p>Desenvolvido por Jefferson Cardoso || 2023</p>
+    </footer>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("password");
+            var showPasswordLink = document.querySelector(".show-password-link");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                showPasswordLink.textContent = "Ocultar Senha";
+            } else {
+                passwordInput.type = "password";
+                showPasswordLink.textContent = "Mostrar Senha";
+            }
+        }
+    </script>
+</body>
+
+</html>

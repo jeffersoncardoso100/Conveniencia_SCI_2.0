@@ -1,0 +1,194 @@
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar {
+        height: 100vh;
+        width: 230px;
+        /* Ajuste a largura conforme necessário */
+        background-color: #1d1b31;
+        position: fixed;
+        left: 0;
+        top: 0;
+        overflow-x: hidden;
+        padding-top: 20px;
+        transition: width 0.5s ease;
+    }
+
+    .sidebar.collapsed {
+        width: 60px;
+    }
+
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        text-decoration: none;
+        color: #fff;
+        transition: background-color 0.3s ease;
+    }
+
+    .sidebar a:hover {
+        background-color: #91d8f8;
+    }
+
+    .sidebar a i {
+        margin-right: 12px;
+        font-size: 20px;
+    }
+
+    .sidebar a:first-child {
+        margin-top: 40px;
+    }
+
+    .sidebar .time {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 16px;
+        text-align: center;
+    }
+
+    .content {
+        margin-left: 250px;
+        /* Ajuste a margem conforme necessário */
+        padding: 16px;
+        height: 1000px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dark-theme {
+        background-color: #111;
+        color: #fff;
+    }
+
+    .dark-theme .sidebar a {
+        color: #fff;
+    }
+
+    .dark-theme .sidebar .time {
+        color: #fff;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .logo img {
+        max-width: 150px;
+        height: auto;
+    }
+
+    .theme-toggle {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .theme-toggle button {
+        padding: 8px 16px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .theme-toggle button:hover {
+        background-color: #555;
+    }
+
+    .sidebar a i {
+        margin-right: 22px;
+        padding: 8px;
+        font-size: 18px;
+    }
+
+
+    .collapse-button {
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        background-color: #1d1b31;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 20px;
+        padding: 8px 12px;
+    }
+
+    .collapse-button:hover {
+        background-color: #555;
+    }
+</style>
+</head>
+
+<body>
+    <div id="sidebar" class="sidebar">
+        <div class="logo">
+
+        </div>
+        <a href="{% url 'home' %}">
+            <i class="fas fa-home"></i>
+            <span class="sidebar-text">Home</span>
+
+        </a>
+        <a href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="sidebar-text">Logout</span>
+        </a>
+        {% if user.is_superuser %}
+        <a href="{% url 'listar_usuarios' %}">
+            <i class="fas fa-users"></i>
+            <span class="sidebar-text">Usuários</span>
+        </a>
+        {% endif %}
+        <a href="{% url 'listar_colaboradores' %}">
+            <i class="fas fa-users"></i>
+            <span class="sidebar-text">Colaboradores</span>
+        </a>
+        <a href="{% url 'listar_produtos' %}">
+            <i class="fas fa-shopping-basket"></i>
+            <span class="sidebar-text">Produtos</span>
+        </a>
+          <a href="{% url 'relatorio_personalizado' %}">
+            <i class="fas fa-cart-plus"></i>
+            <span class="sidebar-text">Relatorios</span>
+        </a>
+        <a href="{% url 'listar_compra' %}">
+            <i class="fas fa-cart-plus"></i>
+            <span class="sidebar-text">Listar Compra</span>
+        </a>
+
+        <button class="collapse-button" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+
+
+
+    <div class="content">
+        <!-- Restante do conteúdo da página -->
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+    </script>

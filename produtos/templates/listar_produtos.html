@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Produtos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
+      
+</head>
+
+<body>
+    
+
+    <div class="container">
+        <div class="image-container">
+            <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png">
+        </div>
+        <h1>Lista de Produtos</h1>
+        <a href="{% url 'cadastro_produtos' %}" class="create-link">
+            <i class="fas fa-plus create-icon"></i>
+             Cadastrar Produto
+        </a>
+        <div class="search-form">
+            <input type="text" id="search-input" class="search-input" placeholder="Digite o nome do Produto">
+            <button type="button" id="search-button" class="search-button">
+                <i class="fas fa-search search-icon"></i>
+            </button>
+        </div>
+        <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome do Produto</th>
+                    <th>Preço</th>
+                    <th>Código de Barras</th>
+                    <th>Situação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in produtos %}
+                <tr>
+                    <td>{{ p.nome }}</td>
+                    <td>{{ p.preco_produto|floatformat:2 }}</td>
+                    <td>{{ p.codigo_barras }}</td>
+                    <td>
+                        <span class="situation-dot {% if p.situacao == 'Ativo' %}active{% else %}inactive{% endif %}"></span>
+                        {{ p.situacao }}
+                    </td>
+                    <td>
+                        <div class="icon">
+                            <span class="show-icons">
+                                <a href="{% url 'editar_produto' produto_id=p.id %}" class="edit-link" onclick="return confirm('Tem certeza que deseja editar este produto?')">
+                                    <i class="fas fa-pencil-alt edit-icon"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+    <div class="button-container">
+            <button class="button" onclick="goBack()">Voltar</button>
+            <button class="button" onclick="goHome()">Home</button>
+          </div>
+          
+          <script>
+            function goBack() {
+              window.history.back(); // Volta para a página anterior
+            }
+          
+            function goHome() {
+              window.location.href = "/"; // Redireciona para a página inicial
+            }
+          </script>
+    <div id="navbar">
+        {% include 'navBar.html' %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+
+            searchButton.addEventListener('click', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const tableRows = document.querySelectorAll('tbody tr');
+
+                tableRows.forEach(row => {
+                    const name = row.querySelector('td:first-child').textContent.toLowerCase();
+                    if (name.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            const icons = document.querySelectorAll('.show-icons');
+
+            icons.forEach(icon => {
+                const editIcon = icon.querySelector('.edit-icon');
+
+                icon.addEventListener('click', () => {
+                    editIcon.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

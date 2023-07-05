@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório Personalizado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'relatorios/relatorio.css' %}">
+    <link rel="stylesheet" href="{% static 'relatorios/modal_relatorio.css' %}">
+
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA"
+                alt="Logo">
+        </div>
+
+        <div class="white-section"></div>
+
+        <h1>Relatório de consumo </h1>
+
+        <div class="gerar-relatorio-geral-btn">
+            <form method="GET" action="{% url 'gerar_relatorio_geral' %}">
+                <input type="hidden" name="formato" value="pdf">
+                <input type="hidden" name="download" value="True">
+                <input type="submit" value="Gerar Relatório Geral em PDF">
+            </form>
+        </div>
+
+
+
+
+
+        <div class="modal-btns-container">
+            <button class="modal-btn" id="openModalBtn">Relatorio Personalizado</button>
+        </div>
+        <div class="modal-backdrop" style="background-color: #2d3560;"></div>
+
+        
+        <div id="myModal" class="modal">
+         
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="top-half"></div>
+                    <div class="bottom-half">
+                        <h2 class="modal-title">Gerar Relatório</h2>
+                        <span class="close">&times;</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form class="modal-form" method="POST" action="{% url 'relatorio_personalizado' %}">
+                        {% csrf_token %}
+
+                        <label for="colaborador">Colaborador:</label>
+                        <select name="colaborador" id="colaborador">
+                            {% for colaborador in colaboradores %}
+                            <option value="{{ colaborador.id }}">{{ colaborador.nome }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <br>
+
+                        <label for="data_inicio">Data de Início:</label>
+                        <input type="date" name="data_inicio" id="data_inicio">
+
+                        <br>
+
+                        <label for="data_fim">Data de Fim:</label>
+                        <input type="date" name="data_fim" id="data_fim">
+
+                        <br>
+
+                        <input type="submit" value="Gerar Relatório">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="close">Fechar</button>
+                </div>
+            </div>
+        </div>
+       
+        <div class="mini-calendar">
+            <div class="month">
+                {% now "F" %} {% now "Y" %}
+            </div>
+            <div class="current-date">
+                {% now "d" %}
+            </div>
+            <table>
+                <tbody id="calendar-body">
+                </tbody>
+            </table>
+        </div>
+        <div class="button-container">
+            <button class="button" onclick="goBack()">Voltar</button>
+            <button class="button" onclick="goHome()">Home</button>
+          </div>
+          
+          <script>
+            function goBack() {
+              window.history.back(); // Volta para a página anterior
+            }
+          
+            function goHome() {
+              window.location.href = "/"; // Redireciona para a página inicial
+            }
+          </script>
+
+</html>  <div id="navbar">
+    {% include 'navBar.html' %}
+</div>
+        
+        <script>
+            // Função para preencher o mini calendário com os dias do mês atual
+            function fillCalendar() {
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+
+                // Obter o número de dias no mês atual
+                var daysInMonth = new Date(year, month, 0).getDate();
+
+                // Obter o dia da semana do primeiro dia do mês atual
+                var firstDayOfWeek = new Date(year, month - 1, 1).getDay();
+
+                // Limpar o conteúdo da tabela do mini calendário
+                var calendarBody = document.getElementById("calendar-body");
+                calendarBody.innerHTML = "";
+
+                // Preencher a tabela com os dias do mês
+                var day = 1;
+                for (var i = 0; i < 6; i++) {
+                    var row = document.createElement("tr");
+
+                    for (var j = 0; j < 7; j++) {
+                        if (i === 0 && j < firstDayOfWeek) {
+                            var cell = document.createElement("td");
+                        } else if (day > daysInMonth) {
+                            break;
+                        } else {
+                            var cell = document.createElement("td");
+                            cell.textContent = day;
+
+                            if (day === date.getDate()) {
+                                cell.classList.add("current-day");
+                            }
+
+                            day++;
+                        }
+
+                        row.appendChild(cell);
+                    }
+
+                    calendarBody.appendChild(row);
+                }
+            }
+
+            // Chamar a função para preencher o mini calendário ao carregar a página
+            fillCalendar();
+        </script>
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var modal = document.getElementById("myModal");
+                var openModalBtn = document.getElementById("openModalBtn");
+                var closeModalBtns = document.querySelectorAll(".close");
+
+                openModalBtn.onclick = function () {
+                    modal.style.display = "block";
+                };
+
+                closeModalBtns.forEach(function (btn) {
+                    btn.onclick = function () {
+                        modal.style.display = "none";
+                    };
+                });
+
+                window.onclick = function (event) {
+                    if (event.target === modal) {
+                        modal.style.display = "none";
+                    }
+                };
+            });
+        </script>
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Usuários</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
+</head>
+<!-- por enquanto para ficar padrão o h1 chamei a class -->
+<style>
+    h1 {
+ 
+  right: 700px !important;
+ 
+}
+
+</style>
+
+<body>
+
+
+    <div class="container">
+        <div class="image-container">
+            <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png">
+               
+        </div>
+        <h1>Usuários</h1>
+        <a href="{% url 'cadastrar_usuario' %}" class="create-link">
+            <i class="fas fa-user-plus create-icon"></i>
+            Criar Usuário
+        </a>
+
+        <div class="search-form">
+            <input type="text" id="search-input" class="search-input" placeholder="Digite o nome do usuário">
+            <button type="button" id="search-button" class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome de Usuário</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>
+                            <div class="icon">
+                                <span>
+                                    <form action="{% url 'deletar_usuario' usuario.id %}" method="POST"
+                                        onsubmit="return confirm('Tem certeza que deseja excluir este usuário?')">
+                                        {% csrf_token %}
+                                        <button type="submit" class="delete-button">
+                                            <i class="fas fa-trash delete-icon"></i>
+                                        </button>
+                                    </form>
+                                </span>
+                                <span>
+                                    <a href="{% url 'editar_usuario' usuario.id %}" class="edit-link">
+                                        <i class="fas fa-pencil-alt edit-icon"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="button-container">
+            <button class="button" onclick="goBack()">Voltar</button>
+            <button class="button" onclick="goHome()">Home</button>
+          </div>
+          
+          <script>
+            function goBack() {
+              window.history.back(); // Volta para a página anterior
+            }
+          
+            function goHome() {
+              window.location.href = "/"; // Redireciona para a página inicial
+            }
+          </script>
+        
+        <div id="navbar">
+            {% include 'navBar.html' %}
+        </div>
+
+        <script>
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+
+            searchButton.addEventListener('click', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const tableRows = document.querySelectorAll('tbody tr');
+
+                tableRows.forEach(row => {
+                    const username = row.querySelector('td:first-child').innerText.toLowerCase();
+                    if (username.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        form {
+
+            margin: 110px auto !important;
+        }
+    </style>
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'formularios/formularios.css' %}">
+      
+    
+    <meta name="autocomplete" content="off">
+</head>
+<body>
+   
+<div class="image-container">
+    <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA" alt="Imagem">
+</div>
+
+<h1>Cadastro de Produto</h1>
+<form method="post">
+    {% csrf_token %}
+
+    {% if form.nome.errors %}
+        <ul class="errors">
+            {% for error in form.nome.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <label for="id_nome">Nome:</label>
+    {{ form.nome }}
+    <br><br>
+
+    {% if form.codigo_barras.errors %}
+        <ul class="errors">
+            {% for error in form.codigo_barras.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <label for="id_codigo_barras">Código de Barras:</label>
+    <input type="text" id="id_codigo_barras" name="codigo_barras" pattern="[0-9]+" maxlength="13" required>
+    <br><br>
+
+    {% if form.preco_produto.errors %}
+        <ul class="errors">
+            {% for error in form.preco_produto.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <label for="id_preco_produto">Preço do Produto:</label>
+    {{ form.preco_produto }}
+    <br><br>
+
+    {% if form.situacao.errors %}
+        <ul class="errors">
+            {% for error in form.situacao.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <label for="situacao">Situação:</label>
+            <select name="situacao" required>
+                <option value="" disabled>Selecione uma opção</option>
+                <option value="Ativo" {% if form.initial.situacao == 'Ativo' %}selected{% endif %}>Ativo</option>
+                <option value="Inativo" {% if form.initial.situacao == 'Inativo' %}selected{% endif %}>Inativo</option>
+            </select><br>
+            
+
+    <input type="submit" value="Cadastrar" class="submit-button">
+</form>
+
+<div class="button-container">
+    <button class="button" onclick="goBack()">Voltar</button>
+    <button class="button" onclick="goHome()">Home</button>
+  </div>
+<div id="navbar">
+    {% include 'navBar.html' %}
+</div>
+  
+<script>
+    function goBack() {
+      window.history.back(); // Volta para a página anterior
+    }
+  
+    function goHome() {
+      window.location.href = "/"; // Redireciona para a página inicial
+    }
+  </script>
+</body>
+</html>

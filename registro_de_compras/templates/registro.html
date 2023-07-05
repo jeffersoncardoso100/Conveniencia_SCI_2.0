@@ -1,0 +1,360 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <title>Registrar Compra</title>
+    <link rel="stylesheet" href="{% static 'registro_compra/compra.css' %}">
+    <link rel="stylesheet" href="{% static 'registro_compra/modal.css' %}">
+
+    <!-- Include necessary libraries and scripts for the modal to work -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+
+        // Função para remover as mensagens de erro após um determinado período de tempo
+        function hideErrorMessages() {
+            var errorMessages = document.getElementsByClassName('alert-danger');
+            for (var i = 0; i < errorMessages.length; i++) {
+                var errorMessage = errorMessages[i];
+                setTimeout(function () {
+                    errorMessage.style.display = 'none';
+                }, 5000); // Tempo em milissegundos (5 segundos)
+            }
+        }
+
+        // Chama a função para esconder as mensagens de erro assim que a página carrega
+        window.onload = hideErrorMessages;
+    </script>
+
+
+</head>
+
+
+
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA"
+                alt="Logo">
+
+            <h1>Registrar Compra</h1>
+            <h4>Código de barras do produto</h4>
+            <div class="form-container">
+                <form method="post" action="{% url 'limpar_carrinho' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="clear-button">Limpar Carrinho</button>
+                </form>
+                <form method="post" action="{% url 'cadastrar_compra' %}">
+                    {% csrf_token %}
+                    <input type="text" id="id_codigo_barras" name="codigo_barras" required>
+                    <button type="submit" class="submit-button">Adicionar ao Carrinho</button>
+                </form>
+            </div>
+            {% if carrinho %}
+            <div class="table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Nome do Produto</th>
+                            <th>Preço</th>
+                            <th></th>
+                            <th class="remove-button"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto in carrinho %}
+                        <tr>
+                            <td>{{ produto.nome }}</td>
+                            <td>{{ produto.preco_produto }}</td>
+                            <td>{{ produto.quantidade }}</td>
+                            <!-- A quantidade é sempre 1 para cada produto no carrinho -->
+                            <td class="remove-button">
+                                <form method="post" action="{% url 'excluir_item' produto.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Remover</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <div class="total-price">
+                Valor Total: R$ {{ valor_total|floatformat:2 }}
+            </div>
+            {% else %}
+            <p>O carrinho está vazio.</p>
+            {% endif %}
+        </div>
+    </div>
+    <button type="button" onclick="openAuthenticationModal()" onclick="handleFinalizarCompra(event)"
+        class="finish-button">
+        <span class="btn-text">Finalizar Compra</span>
+        <i class="fas fa-check-circle"></i>
+    </button>
+    <button type="button" onclick="openAuthenticationModal(); openExpensesModal();" class="btn-custom">
+        Ver Valores Gastos
+        <i class="fas fa-dollar-sign"></i>
+    </button>
+
+
+    {% if messages %}
+    <div id="error-alert" class="alert alert-danger fixed-bottom text-center">
+        <ul class="error-list">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% if produto_inativo_message %}
+    <div class="error-message">{{ produto_inativo_message }}</div>
+    {% endif %}
+
+
+
+    {% endif %}
+
+    <!-- Modal de Autenticação -->
+    <!-- Modal de Autenticação -->
+    <div id="authenticationModal" class="modal">
+        <div class="modal-backdrop" style="background-color: #2d3560;"></div>
+
+
+
+        <div class="modal-aut">
+            <div class="logo">
+                <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png" alt="Logo">
+            </div>
+
+            <h2>Autenticação</h2>
+
+            <form id="finalizar_compra" method="post" action="{% url 'finalizar_compra' %}">
+                {% csrf_token %}
+                <label for="login">Login:</label>
+                <input type="text" id="login" name="login" class="input-field">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" class="input-field">
+
+                <button type="submit" onclick="handleFinalizarCompra(event)" class="finalizar-btn">
+                    <span class="btn-text">Finalizar Compra</span>
+                    <i class="fas fa-check-circle"></i>
+                </button>
+                <button class="close-button" onclick="closeAuthenticationModal()">
+                    Fechar
+
+                </button>
+
+
+            </form>
+        </div>
+    </div>
+
+    <div id="expensesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExpensesModal()">&times;</span>
+            <div class="logo">
+                <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png" alt="Logo">
+            </div>
+            <h2>Visualizar Gastos</h2>
+
+            <form id="visualizar_gastos" method="post" action="{% url 'visualizar_gastos' %}">
+                {% csrf_token %}
+                <label for="username">Login:</label>
+                <input type="text" id="login" name="login">
+
+
+                <label for="password">Senha:</label>
+                <input type="password" id="senha" name="senha">
+                <button type="submit" onclick="handleVisualizarGastos(event)" class="visualizar-btn">
+                    <span class="btn-text">Visualizar Gastos</span>
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="close-button" onclick="closeAuthenticationModal()">
+                    Fechar
+
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal de Valores Gastos -->
+
+    <div id="valuesModal" class="modal">
+        <div class="modal-gast">
+            <span class="close" onclick="closeValuesModal()">&times;</span>
+            <h2>Valores Gastos</h2>
+            <p>Valor gasto no mês atual: <span id="currentMonthValue"></span></p>
+            <p>Valor gasto na última referência: <span id="lastReferenceValue"></span></p>
+        </div>
+    </div>
+
+    <button class="bb" onclick="openSystemInfoModal()"><i class="fas fa-info-circle"></i></button>
+
+
+    <div id="systemInfoModal" class="modal">
+        <div class="modal-backdrop" style="background-color: #2d3560;"></div>
+        <div class="modal-info">
+            <span class="close" onclick="closeSystemInfoModal()">&times;</span>
+            <h2>Conveniência SCI</h2>
+            <br>
+            <br>
+            <br>
+            <p>Versão do sistema: <span id="systemVersion">2.0</span></p>
+            <p>Criação: <span id="creationDate">26/06/2023</span></p>
+            <p>Desenvolvido por: <span id="developerName">Jefferson Cardoso</span></p>
+            <p>Todos os direitos reservados a SCI Sistemas Contábeis.</p>
+            <p><a href="https://www.sci.com.br/">https://www.sci.com.br/</a></p>
+
+        </div>
+    </div>
+
+
+
+    <script>
+        // Função para abrir o modal
+        function openSystemInfoModal() {
+            var modal = document.getElementById("systemInfoModal");
+            modal.style.display = "block";
+        }
+
+        // Função para fechar o modal
+        function closeSystemInfoModal() {
+            var modal = document.getElementById("systemInfoModal");
+            modal.style.display = "none";
+        }
+    </script>
+    <script>
+        function formatarValor(valor) {
+            return valor.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function openValuesModal(lastReferenceValue, currentMonthValue) {
+            document.getElementById("lastReferenceValue").textContent = formatarValor(lastReferenceValue);
+            document.getElementById("currentMonthValue").textContent = formatarValor(currentMonthValue);
+
+            document.getElementById("valuesModal").style.display = "block";
+
+            setTimeout(function () {
+                closeValuesModal();
+            }, 5000);
+        }
+
+        function closeValuesModal() {
+            document.getElementById("valuesModal").style.display = "none";
+            window.location.href = "{% url 'cadastrar_compra' %}"
+        }
+
+        // Variáveis de valores de gastos
+        var valorGastoUltimaReferencia = "{{ valor_gasto_ultima_referencia }}";
+        var valorGastoMesAtual = "{{ valor_gasto_mes_atual }}";
+
+        // Verifica se os valores estão definidos e exibe o modal de valores de gastos
+        if (valorGastoUltimaReferencia && valorGastoMesAtual) {
+            openValuesModal(parseFloat(valorGastoUltimaReferencia), parseFloat(valorGastoMesAtual));
+        }
+    </script>
+
+    <script>
+        function formatarValor(valor) {
+            return valor.toFixed(2);
+        }
+
+        function openAuthenticationModal() {
+            document.getElementById("authenticationModal").style.display = "block";
+        }
+
+        function closeAuthenticationModal() {
+            document.getElementById("authenticationModal").style.display = "none";
+            window.location.href = "{% url 'cadastrar_compra' %}"
+        }
+
+        function openExpensesModal() {
+            document.getElementById("expensesModal").style.display = "block";
+        }
+
+        function closeExpensesModal() {
+            document.getElementById("expensesModal").style.display = "none";
+            window.location.href = "{% url 'cadastrar_compra' %}"
+        }
+    </script>
+
+    <script>
+        function formatarValor(valor) {
+            return valor.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // Função para remover a mensagem de erro após 2 segundos
+
+
+        // Validação do campo de código de barras para aceitar apenas caracteres numéricos
+        document.getElementById("id_codigo_barras").addEventListener("input", function (e) {
+            this.value = this.value.replace(/[^0-9]/g, ""); // Remove caracteres não numéricos
+        });
+
+        // Resto do seu código aqui...
+    </script>
+
+    <script>
+        function formatarValor(valor) {
+            return valor.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function openValuesModal(lastReferenceValue, currentMonthValue) {
+            document.getElementById("lastReferenceValue").textContent = formatarValor(lastReferenceValue);
+            document.getElementById("currentMonthValue").textContent = formatarValor(currentMonthValue);
+
+            document.getElementById("valuesModal").style.display = "block";
+
+
+        }
+
+        function closeValuesModal() {
+            document.getElementById("valuesModal").style.display = "none";
+            window.location.href = "{% url 'cadastrar_compra' %}"
+        }
+
+        // Variáveis de valores de gastos
+        var valorGastoUltimaReferencia = "{{ valor_gasto_ultima_referencia }}";
+        var valorGastoMesAtual = "{{ valor_gasto_mes_atual }}";
+
+        // Verifica se os valores estão definidos e exibe o modal de valores de gastos
+        if (valorGastoUltimaReferencia && valorGastoMesAtual) {
+            openValuesModal(parseFloat(valorGastoUltimaReferencia), parseFloat(valorGastoMesAtual));
+        }
+    </script>
+
+</body>
+
+</html>

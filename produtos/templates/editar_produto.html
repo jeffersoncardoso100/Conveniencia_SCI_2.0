@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <link rel="stylesheet" href="{% static 'formularios/edit_formulario.css' %}">
+    <style>
+        form {
+
+            margin: 110px auto !important;
+        }
+    </style>
+
+    <title>Editar Produto</title>
+
+
+    <meta name="autocomplete" content="off">
+</head>
+
+<body>
+    <div class="image-container">
+        <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA"
+            alt="Imagem">
+    </div>
+    <h1>Editar Produto</h1>
+
+    <div class="form-container">
+        <form action="{% url 'editar_produto' produto_id=produto.id %}" method="POST">
+            {% csrf_token %}
+
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" value="{{ form.nome.value }}">
+
+            <label for="codigo_barras">Código de Barras</label>
+            <input type="text" id="id_codigo_barras" name="codigo_barras" pattern="[0-9]+" maxlength="13" required
+                value="{{ produto.codigo_barras }}">
+
+            {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+            {% endif %}
+
+            <label for="preco_produto">Preço do Produto</label>
+
+
+
+            <input type="text" id="preco_produto" name="preco_produto" value=" {{ form.preco_produto.value }}">
+
+
+            {% if preco_produto_error %}
+            <p class="error-message">{{ preco_produto_error }}</p>
+            {% endif %}
+
+            <input type="hidden" name="preco_produto_decimal" id="preco_produto_decimal"
+                value="{{ form.preco_produto_decimal.value }}">
+                <label for="situacao">Situação:</label>
+                <select name="situacao" required>
+                    <option value="" disabled>Selecione uma opção</option>
+                    <option value="Ativo" {% if form.initial.situacao == 'Ativo' %}selected{% endif %}>Ativo</option>
+                    <option value="Inativo" {% if form.initial.situacao == 'Inativo' %}selected{% endif %}>Inativo</option>
+                </select><br>
+
+            <input type="submit" value="Cadastrar" class="submit-button">
+        </form>
+    </div>
+    <div class="button-container">
+        <button class="button" onclick="goBack()">Voltar</button>
+        <button class="button" onclick="goHome()">Home</button>
+      </div>
+
+    <div id="navbar">
+        {% include 'navBar.html' %}
+    </div>
+
+    <script>
+        function goBack() {
+          window.history.back(); // Volta para a página anterior
+        }
+      
+        function goHome() {
+          window.location.href = "/"; // Redireciona para a página inicial
+        }
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+
+    </script>
+
+    <script>
+
+        var precoProdutoInput = document.getElementById("preco_produto");
+        var precoProdutoDecimalInput = document.getElementById("preco_produto_decimal");
+
+
+    </script>
+
+
+
+</body>
+
+</html>

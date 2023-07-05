@@ -1,0 +1,240 @@
+/* Estilos globais */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f7ff;
+  margin: 0;
+  padding: 58px;
+  overflow: hidden; /* Impede que a rolagem se aplique ao body */
+}
+
+.container {
+  max-width: 1420px;
+  margin: 0 auto;
+  padding: 10px;
+  overflow: auto;
+  margin-right: 130px; /* Adjust the value as needed */
+}
+
+h1 {
+  padding: 35px;
+  text-align: center;
+  color: #1d1b31;
+  font-size: 3rem;
+  margin-top: -52px !important;
+  position: absolute;
+  left: auto;
+  right: 630px;
+}
+
+/* Estilos da tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 8px 8px;
+}
+
+.table-container {
+  margin-top: 20px !important;
+  overflow: auto;
+  max-height: 620px; /* Adjust the maximum height as needed */
+  border-radius: 0 0 8px 8px;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background-color: #1d1b31;
+  color: #f9f9f9;
+  font-size: 1.5rem;
+  cursor: pointer;
+
+}
+
+th,
+td {
+  border-bottom: 1px solid #ddd;
+  padding: 19px;
+  text-align: left;
+  font-size: 1.3rem;
+
+  
+}
+
+td .icon {
+  display: flex;
+  align-items: center;
+}
+
+td .edit-icon {
+  color: #155ba4;
+  font-size: 1.6rem;
+  margin-left: 10px;
+}
+
+td .show-icons {
+  display: none;
+}
+
+td:hover {
+  background-color: #f9f9f9;
+}
+
+td:hover .show-icons {
+  display: flex;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Estilos do ícone de situação */
+td .situation-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: 1px solid #333;
+}
+
+td .situation-dot.active {
+  background-color: green;
+  border-color: green;
+}
+
+td .situation-dot.inactive {
+  background-color: red;
+  border-color: red;
+}
+
+/* Estilos da caixa de pesquisa */
+.search-form {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.search-input {
+  padding: 12px;
+  border: 1px solid #6d6b6b;
+  border-radius: 4px;
+  width: 250px;
+  font-size: 1.2rem;
+}
+
+.search-button {
+  padding: 12px 24px;
+  background-color: #91d8f8;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.search-icon {
+  margin-right: 5px;
+}
+
+/* Estilos da imagem */
+.image-container {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.image-container img {
+  max-width: 200px;
+  margin-top: -10px !important;
+}
+
+/* Estilos do link de criação */
+.create-link {
+  display: flex;
+  align-items: center;
+  float: left;
+  background-color: #91d8f8;
+  color: #000;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: background-color 0.3s;
+}
+
+.create-link:hover {
+  background-color: #2d3560;
+}
+
+/* Estilos de hover */
+th:hover {
+  background-color: #424141;
+}
+
+/* Estilos dos botões abaixo da tabela */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: -2px;
+  background-color: #2d3560;
+  padding: 10px;
+}
+
+.button {
+  padding: 12px 24px;
+  background-color: #91d8f8;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.button:hover {
+  background-color: #2d3560;
+}
+
+/* Estilos responsivos */
+
+@media only screen and (max-width: 768px) {
+  /* Estilos para telas menores que 768px */
+  body {
+    padding: 20px;
+  }
+
+  .container {
+    margin-right: 0;
+  }
+
+  h1 {
+    position: static;
+    margin-top: 0;
+  }
+
+  .table-container {
+    max-height: none;
+  }
+
+  .search-form {
+    text-align: center;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 300px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  .create-link {
+    float: none;
+    margin-bottom: 10px;
+  }
+
+  .button-container {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+}
+

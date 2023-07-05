@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Minha Página Inicial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Estilos para o layout do grid */
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-gap: 20px;
+        }
+
+        .widget {
+    background-color: rgba(29, 27, 49, 0.8); /* Cor com transparência */
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(255, 252, 252, 0.1);
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+
+        .widget:hover {
+            background-color: #888888;
+        }
+
+        .widget-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .widget-content {
+            font-size: 20px;
+        }
+
+        .widget-icon {
+            font-size: 60px;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        /* Estilos para o tema dark */
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+
+        .content {
+            margin: 0 20px;
+        }
+
+        /* Estilos do calendário e relógio */
+        .calendar-widget {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Estilos para a hora de Brasília */
+        .brasil-time {
+            background-color: #1d1b31;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 20px;
+            grid-column: span 3;
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .brasil-time-content {
+            font-size: 34px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: -100px;
+        }
+
+        .image-container img {
+            max-width: 250px;
+            margin-top: -90px;
+            /* Ajuste o valor conforme necessário */
+        }
+
+        /* Estilos para as anotações manuais */
+        .notes-widget {
+            background-color: #191a1b;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            grid-column: span 3;
+            color: #333;
+        }
+
+        .notes-widget textarea {
+            width: 90%;
+            height: 50px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: none;
+            resize: none;
+        }
+
+        .notes-widget textarea {
+            font-size: 28px;
+            /* Defina o tamanho de fonte desejado */
+        }
+    </style>
+</head>
+<div class="container">
+    <div class="image-container">
+        <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA"
+            alt="Logo">
+    </div>
+    <div class="navbar">
+        <div class="navbar-brand"></div>
+        <div>, {{ username }}!</div>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            <div class="brasil-time">
+                <h2 class="brasil-time-title">Conveniência SCI 2.0</h2>
+                <p class="brasil-time-content" id="brasil-time"></p>
+                <p class="brasil-time-content" id="brasil-date"></p>
+            </div>
+
+            {% block content %}
+            <!-- Seu código HTML existente -->
+
+            <div class="widget">
+                <a href="{% url 'listar_compra' %}" class="widget-link">
+                    <i class="fas fa-shopping-cart widget-icon"></i>
+                    <h2 class="widget-title">Compras</h2>
+                </a>
+            </div>
+
+
+            <div class="widget">
+                <a href="{% url 'listar_colaboradores' %}" class="widget-link">
+                    <i class="fas fa-users widget-icon"></i>
+                    <h2 class="widget-title">Colabs</h2>
+                </a>
+                <span id="notification" class="widget-notification"></span>
+            </div>
+            
+
+            <div class="widget">
+                <a href="{% url 'relatorio_compras_pdf' %}" class="widget-link">
+                    <i class="fas fa-chart-bar widget-icon"></i>
+                    <h2 class="widget-title">Relatorios</h2>
+                </a>
+            </div>
+
+
+            <!-- Mais código HTML -->
+
+            {% endblock %}
+
+            <div class="widget">
+                <a href="{% url 'listar_produtos' %}" class="widget-link">
+                    <i class="fas fa-shopping-basket widget-icon"></i>
+                    <h2 class="widget-title">Produtos</h2>
+                </a>
+            </div>
+
+
+            <div class="widget">
+                <a href="{% url 'cadastrar_compra' %}" class="widget-link">
+                    <i class="fas fa-store widget-icon"></i>
+                    <h2 class="widget-title">
+                        Conveniência</h2>
+                </a>
+            </div>
+            <div class="widget">
+                <a href="https://sci.com.br/?gclid=Cj0KCQjwtO-kBhDIARIsAL6LoreM2ebmvNJjJI7I6hVDvdxjmK-Om9ahIxhdK5x229mBcLquEpppNgYaAhP1EALw_wcB"
+                    class="widget-link">
+                    <i class="fas fa-building widget-icon"></i>
+                    <h2 class="widget-title">SCI</h2>
+                </a>
+            </div>
+
+
+            <div class="notes-widget">
+                <textarea id="notesTextarea"></textarea>
+            </div>
+
+
+            <div class="content">
+                <!-- Conteúdo adicional da página -->
+            </div>
+            <div id="navbar">
+                {% include 'navBar.html' %}
+            </div>
+
+            
+            <script>
+                var notification = document.getElementById('notification');
+notification.textContent = 'Nova notificação';
+                // Obtém o elemento <textarea>
+                var notesTextarea = document.getElementById('notesTextarea');
+
+                // Verifica se há um valor salvo no localStorage e preenche o <textarea> com esse valor, se existir
+                var savedNotes = localStorage.getItem('savedNotes');
+                if (savedNotes) {
+                    notesTextarea.value = savedNotes;
+                }
+
+                // Evento 'input' para detectar quando o texto é alterado no <textarea>
+                notesTextarea.addEventListener('input', function (event) {
+                    // Obtém o valor do <textarea> após a alteração
+                    var newNotes = event.target.value;
+
+                    // Salva o novo valor no localStorage
+                    localStorage.setItem('savedNotes', newNotes);
+                });
+
+                function updateClock() {
+                    var date = new Date();
+                    var options = { hour12: false, timeZone: 'America/Sao_Paulo' };
+                    var brasilTime = date.toLocaleTimeString('en-US', options);
+                    document.getElementById('brasil-time').textContent = brasilTime;
+
+                    var brasilDate = formatDate(date);
+                    document.getElementById('brasil-date').textContent = brasilDate;
+                }
+
+                function formatDate(date) {
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+
+                setInterval(updateClock, 1000);
+            </script>
+            </body>
+
+</html>

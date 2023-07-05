@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listagem de Compras</title>
+    <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("compras-table");
+            switching = true;
+            dir = "desc";
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "desc") {
+                        dir = "asc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function filterTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search-input");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("compras-table");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0]; // Filtrar pela primeira coluna (nome)
+                td2 = tr[i].getElementsByTagName("td")[1]; // Filtrar pela segunda coluna (data)
+                if (td || td2) {
+                    txtValue = td.textContent || td.innerText;
+                    txtValue2 = td2.textContent || td2.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png">
+        </div>
+        <h1>Lista de Compras</h1>
+
+        <div class="search-form">
+            <input type="text" id="search-input" class="search-input" placeholder="Filtrar por nome ou data" onkeyup="filterTable()">
+            <button class="search-button" onclick="filterTable()"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="table-container">
+            <table id="compras-table" class="compras-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Colaborador</th>
+                        <th onclick="sortTable(1)">Data da Compra</th>
+                        <th onclick="sortTable(2)">Preço Total</th>
+                        <th onclick="sortTable(3)">Produtos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for compra in compras reversed %}
+                    <tr>
+                        <td>{{ compra.colaborador.nome }}</td>
+                        <td>{{ compra.data_compra|date:"d/m/Y" }}</td>
+                        <td>R$ {{ compra.preco|floatformat:2 }}</td>
+        
+                        <td>
+                            <ul>
+                                {% for item in compra.itemcompra_set.all %}
+                                    {% if item.quantidade > 0 %}
+                                        <li>{{ item.produto.nome }} ({{ item.quantidade }})</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="button-container">
+            <button class="button" onclick="goBack()">Voltar</button>
+            <button class="button" onclick="goHome()">Home</button>
+          </div>
+          
+          <script>
+            function goBack() {
+              window.history.back(); // Volta para a página anterior
+            }
+          
+            function goHome() {
+              window.location.href = "/"; // Redireciona para a página inicial
+            }
+          </script>
+        <div id="navbar">
+            {% include 'navBar.html' %}
+        </div>
+        
+</body>
+</html>

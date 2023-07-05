@@ -1,0 +1,65 @@
+{%load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        form {
+
+            margin: 110px auto !important;
+        }
+  
+
+    </style>
+
+    <title>Editar Usuário</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'formularios/edit_formulario.css' %}">
+</head>
+<body>
+    <div class="image-container">
+       
+            <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA" alt="Imagem">
+        </a>
+    </div>
+
+    <h1>Editar Usuário</h1>
+
+    <form action="{% url 'editar_usuario' user.id %}" method="POST">
+        {% csrf_token %}
+        <label for="username" class="info-tooltip">Nome de Usuário
+            <i class="fas fa-info-circle info-icon" title="Informe o nome de usuário"></i>
+            <span class="tooltip-text">Digite apenas letras</span>
+        </label>
+        <input type="text" id="username" name="username" pattern="[A-Za-z]+" title="Digite apenas letras" value="{{ user.username }}" required>
+
+        <label for="email" class="info-tooltip">Email
+            <i class="fas fa-info-circle info-icon" title="Informe o email"></i>
+            <span class="tooltip-text">Digite um email válido</span>
+        </label>
+        <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+        {% if error_message %}
+        <p class="error-message">{{ error_message }}</p>
+        {% endif %}
+
+        <button type="submit" class="submit-button">Salvar</button>
+    </form>
+    <div class="button-container">
+        <button class="button" onclick="goBack()">Voltar</button>
+        <button class="button" onclick="goHome()">Home</button>
+      </div>
+    <div id="navbar">
+        {% include 'navBar.html' %}
+    </div>
+
+    <script>
+        function goBack() {
+          window.history.back(); // Volta para a página anterior
+        }
+      
+        function goHome() {
+          window.location.href = "/"; // Redireciona para a página inicial
+        }
+      </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <title>Editar Colaborador</title>
+    <link rel="stylesheet" href="{% static 'formularios/edit_formulario.css' %}">
+    <meta name="autocomplete" content="off">
+</head>
+
+
+<body>
+
+
+    <div class="image-container">
+        <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA"
+            alt="Imagem">
+    </div>
+
+    <h1>Editar Colaborador</h1>
+    <div class="form-container">
+        <form action="{% url 'editar_colaborador' colaborador_id=colaborador_id %}" method="POST">
+            {% csrf_token %}
+            {% for message in messages %}
+            <p class="message">{{ message }}</p>
+            {% endfor %}
+
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" value="{{ form.nome.value }}" oninput="validateLetters(event)">
+            {% if form.nome.errors %}
+            <p class="error-message">{{ form.nome.errors | join:", " }}</p>
+            {% endif %}
+
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" name="cpf" value="{{ form.cpf.value }}" oninput="formatCPF(event)" maxlength="14">
+            {% if form.cpf.errors %}
+            <p class="error-message">{{ form.cpf.errors | join:", " }}</p>
+            {% endif %}
+            
+
+            <label for="login">Login</label>
+            <input type="text" id="login" name="login" value="{{ form.login.value }}">
+            {% if form.login.errors %}
+            <p class="error-message">{{ form.login.errors | join:", " }}</p>
+            {% endif %}
+
+            <label for="senha">Senha</label>
+            <div class="password-icon">
+                <input type="password" id="senha" name="senha" value="{{ form.senha.value }}">
+                <svg class="toggle-password" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M8 2c-3.042 0-5.813 2.326-7.512 6C2.187 11.674 4.958 14 8 14s5.813-2.326 7.512-6C13.813 4.326 11.042 2 8 2zm0 9.2a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zM8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+                </svg>
+            </div>
+            {% if form.senha.errors %}
+            <p class="error-message">{{ form.senha.errors | join:", " }}</p>
+            {% endif %}
+
+            <label for="confirma_senha">Confirmar Senha</label>
+            <div class="password-icon">
+                <input type="password" id="confirmar_senha" name="confirmar_senha"
+                    value="{{ form.confirmar_senha.value }}">
+                <svg class="toggle-password" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M8 2c-3.042 0-5.813 2.326-7.512 6C2.187 11.674 4.958 14 8 14s5.813-2.326 7.512-6C13.813 4.326 11.042 2 8 2zm0 9.2a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zM8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+                </svg>
+            </div>
+            {% if form.confirma_senha.errors %}
+            <p class="error-message">{{ form.confirma_senha.errors | join:", " }}</p>
+            {% endif %}
+            <label for="situacao">Situação:</label>
+            <select name="situacao" required>
+                <option value="" disabled>Selecione uma opção</option>
+                <option value="Ativo" {% if form.initial.situacao == 'Ativo' %}selected{% endif %}>Ativo</option>
+                <option value="Inativo" {% if form.initial.situacao == 'Inativo' %}selected{% endif %}>Inativo</option>
+            </select><br>
+            
+            
+            
+
+            <input type="submit" value="Salvar" class="submit-button">
+        </form>
+        <div id="navbar">
+            {% include 'navBar.html' %}
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+
+        // Format CPF input
+        function formatCPF(event) {
+            var cpfInput = event.target;
+            var cpf = cpfInput.value.replace(/\D/g, '');
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            cpfInput.value = cpf;
+        }
+
+        // Validate input to allow only letters
+        function validateLetters(event) {
+            var input = event.target;
+            input.value = input.value.replace(/[^a-zA-Z ]/g, '');
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        const togglePassword = document.querySelectorAll('.toggle-password');
+
+        togglePassword.forEach((toggle) => {
+            toggle.addEventListener('click', () => {
+                const passwordInput = toggle.previousElementSibling;
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggle.textContent = 'Ocultar Senha';
+                } else {
+                    passwordInput.type = 'password';
+                    toggle.textContent = 'Mostrar Senha';
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#cpf').mask('000.000.000-00', { reverse: true });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<html>
+<head>
+    <style>
+        body {
+            margin-left: 20px; /* Alinha o conteúdo à esquerda */
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 50vw; /* Largura do elemento em 60% da largura da viewport */
+            margin: 0 auto;
+        }
+        
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left; /* Alinha o texto à esquerda */
+        }
+        
+        th {
+            background-color: #2d3560;
+            color: #ffffff;
+        }
+        
+        .total {
+            font-weight: bold;
+            background-color: #f7eb1e;
+            text-align: center; /* Centraliza o texto */
+        }
+        
+        .center-content {
+            text-align: center; /* Centraliza o conteúdo */
+            margin-bottom: 20px; /* Espaçamento inferior */
+        }
+        
+        .comprovante-title {
+            font-size: 2vw;
+            color: #2d3560; /* Cor do texto */
+        }
+        
+        .content-cell {
+            font-size: 1.5vw; /* Tamanho da fonte do conteúdo da tabela */
+        }
+    </style>
+</head>
+<body>
+    <div class="center-content">
+        <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png" alt="Logo" width="300vw" height="auto">
+    </div>
+    
+    <div class="center-content">
+        <h2 style="font-size: 2vw;">Comprovante de compra</h2>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: left;">Produto</th> <!-- Alinha o texto "Produto" à esquerda -->
+                <th style="text-align: left;">Preço</th> <!-- Alinha o texto "Preço" à esquerda -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td class="content-cell">{{ produto.nome }}</td>
+                <td class="content-cell">R$ {{ produto.preco_produto|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td class="total content-cell" colspan="2">Valor total da compra: R$ {{ valor_total|floatformat:2 }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="center-content">
+        <p style="font-size: 1vw;">Data e hora da compra: {{ data_hora_compra }}</p>
+    </div>
+</body>
+</html>

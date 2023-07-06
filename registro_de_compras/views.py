@@ -1,3 +1,4 @@
+from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -18,6 +19,7 @@ from django.db import transaction
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 
+
 def CadastrarCompra(request):
     if request.method == 'POST':
         codigo_barras = request.POST.get('codigo_barras')
@@ -32,11 +34,14 @@ def CadastrarCompra(request):
                     carrinho.append(produto.id)
                     request.session['carrinho'] = carrinho
 
-                    messages.success(request, 'Produto adicionado ao carrinho!')
+                    messages.success(
+                        request, 'Produto adicionado ao carrinho!')
                 else:
-                    messages.warning(request, 'Produto inativado. Não é possível adicioná-lo.')
+                    messages.warning(
+                        request, 'Produto inativado. Não é possível adicioná-lo.')
             except Produto.DoesNotExist:
-                messages.error(request, 'Produto com código de barras inválido.')
+                messages.error(
+                    request, 'Produto com código de barras inválido.')
         else:
             messages.error(request, 'Produto com código de barras inválido.')
 
@@ -59,8 +64,15 @@ def CadastrarCompra(request):
 
 
 
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra):
+from django.utils.html import strip_tags
+
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.conf import settings
+
+def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra, nome_colaborador, pdf_path):
     email_servidor = settings.EMAIL_HOST_USER
 
     # Calcular o valor total da compra
@@ -70,7 +82,45 @@ def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra):
     context = {
         'produtos': produtos,
         'valor_total': valor_total,
-        'data_hora_compra': data_hora_compra
+        'data_hora_compra': data_hora_compra,
+        'nome_colaborador': nome_colaborador
+    }
+    mensagem_html = render_to_string('email_template.html', context)
+
+    # Cria um objeto EmailMessage
+    email = EmailMessage(
+        subject=assunto,
+        body=mensagem,
+        from_email=email_servidor,
+        to=[destinatario],
+    )
+
+    # Anexa o PDF ao e-mail
+    with open(pdf_path, 'rb') as pdf_file:
+        email.attach('compra.pdf', pdf_file.read(), 'application/pdf')
+
+    # Define o conteúdo HTML do e-mail
+    email.attach_alternative(mensagem_html, 'text/html')
+
+    # Envie o e-mail
+    email.send()
+
+
+"""
+
+
+def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra,nome_colaborador):
+    email_servidor = settings.EMAIL_HOST_USER
+
+    # Calcular o valor total da compra
+    valor_total = sum(produto.preco_produto for produto in produtos)
+
+    # Renderizar o template com as variáveis
+    context = {
+        'produtos': produtos,
+        'valor_total': valor_total,
+        'data_hora_compra': data_hora_compra,
+        'nome_colaborador': nome_colaborador
     }
     mensagem_html = render_to_string('email_template.html', context)
 
@@ -80,8 +130,10 @@ def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra):
         html_message=mensagem_html,
         from_email=email_servidor,
         recipient_list=[destinatario],
-        fail_silently=False,
-    )
+        fail_silently=False
+       
+    )"""
+
 
 def FinalizarCompra(request):
     if request.method == 'POST':
@@ -96,8 +148,8 @@ def FinalizarCompra(request):
 
             if not check_password(senha, colaborador.senha):
                 raise Colaborador.DoesNotExist
-        except Colaborador.DoesNotExist:
-            messages.error(request, 'Credenciais inválidas')
+        except Exception as e:
+            if 'Colaborador' in str(e) : messages.error(request, 'Credenciais inválidas')
             return redirect('cadastrar_compra')
 
         # Verifique a situação do colaborador apenas se o objeto colaborador for encontrado
@@ -165,19 +217,22 @@ def FinalizarCompra(request):
         # Obtém os valores atualizados
         valor_gasto_ultima_referencia = ValorReferenciaAnterior(colaborador)
         valor_gasto_mes_atual = ValorReferenciaAtual(colaborador)
-    destinatario = 'jeffguitarrista1@gmail.com'
-    assunto = 'Compra realizada com sucesso'
-    mensagem = 'Sua compra foi efetuada com sucesso.'
-    data_hora_atual = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    enviar_email(destinatario, assunto, mensagem, carrinho, data_hora_atual)
+        destinatario = colaborador.email
+        assunto = 'Compra realizada com sucesso'
+        mensagem = 'Sua compra foi efetuada com sucesso.'
+        data_hora_atual = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    return render(request, 'registro.html', {
-        'valor_gasto_ultima_referencia': valor_gasto_ultima_referencia,
-        'valor_gasto_mes_atual': valor_gasto_mes_atual,
-        'data_hora_compra': data_hora_atual
-    })
-    
+        enviar_email(destinatario, assunto, mensagem,
+                     carrinho, data_hora_atual, colaborador.nome)
+
+        return render(request, 'registro.html', {
+            'valor_gasto_ultima_referencia': valor_gasto_ultima_referencia,
+            'valor_gasto_mes_atual': valor_gasto_mes_atual,
+            'data_hora_compra': data_hora_atual,
+            'nome_colaborador': colaborador.nome
+        })
+
 
 def LimparCarrinho(request):
     request.session.pop('carrinho', None)

@@ -40,7 +40,6 @@
     font-size: 24px;
     margin: 0;
     text-align: center;
-    
 }
 
 .close {
@@ -123,7 +122,7 @@
 }
 
 .modal-btn {
-    margin:  30px;
+    margin: 30px;
     padding: 20px 190px;
     background-color: #91d8f8;
     color: #000000;
@@ -150,7 +149,6 @@
 }
 
 /* Estilos para o botão de Relatório Geral */
-
 .gerar-relatorio-geral-btn {
     display: flex;
     justify-content: center;

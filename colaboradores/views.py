@@ -6,31 +6,30 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.validators import EmailValidator
+from django.core.exceptions import ValidationError
 
 
 @login_required(login_url='login')
+
 def criar_colaboradores(request):
     if request.method == 'POST':
         form = CadastrarColaboradorForm(request.POST)
         if form.is_valid():
-
-
-            # pode testar apresentando muita queryy
-            
-
-            
             nome = form.cleaned_data['nome']
             cpf = form.cleaned_data['cpf']
             login = form.cleaned_data['login']
+            email = form.cleaned_data['email']
             senha = form.cleaned_data['senha']
             confirmar_senha = form.cleaned_data['confirmar_senha']
             situacao = form.cleaned_data['situacao']
 
+            # Check if password and confirmation match
             if senha != confirmar_senha:
-                messages.error(
-                    request, 'A senha e a confirmação de senha não correspondem.')
+                messages.error(request, 'A senha e a confirmação de senha não correspondem.')
                 return redirect('criar_colaboradores')
 
+            # Check if CPF or login already exists
             if Colaborador.objects.filter(cpf=cpf).exists():
                 messages.error(request, 'CPF já cadastrado.')
                 return redirect('criar_colaboradores')
@@ -39,13 +38,23 @@ def criar_colaboradores(request):
                 messages.error(request, 'Login já cadastrado.')
                 return redirect('criar_colaboradores')
 
+            # Check if email already exists
+            if Colaborador.objects.filter(email=email).exists():
+                messages.error(request, 'Email já cadastrado.')
+                return redirect('criar_colaboradores')
+
             try:
-                # Criptografa a senha
+                # Validate the email
+                email_validator = EmailValidator()
+                email_validator(email)
+
+                # Encrypt the password
                 senha_criptografada = make_password(senha)
 
-                # Salva o colaborador no banco de dados
+                # Save the collaborator in the database
                 colaborador = Colaborador(
-                    nome=nome, cpf=cpf, login=login, senha=senha_criptografada, situacao=situacao)
+                    nome=nome, cpf=cpf, login=login, email=email, senha=senha_criptografada, situacao=situacao
+                )
                 colaborador.save()
 
                 # Additional logic to create the collaborator with other fields
@@ -56,8 +65,7 @@ def criar_colaboradores(request):
                 error_message = "Erro de validação: " + str(e)
                 return render(request, 'error.html', {'error_message': error_message})
             except Exception as e:
-                error_message = "Ocorreu um erro ao criar o colaborador. Detalhes: " + \
-                    str(e)
+                error_message = "Ocorreu um erro ao criar o colaborador. Detalhes: " + str(e)
                 logging.exception(error_message)
                 return render(request, 'error.html', {'error_message': error_message})
     else:
@@ -66,10 +74,23 @@ def criar_colaboradores(request):
     return render(request, 'cadastro_colaborador.html', {'form': form})
 
 
+
 @login_required(login_url='login')
 def listar_colaboradores(request):
     colaboradores = Colaborador.objects.all()
+    
+        
     return render(request, 'listar_colaborador.html', {'colaboradores': colaboradores})
+
+
+
+
+@login_required
+def visualizar_colaborador(request, colaborador_id):
+    colaborador = get_object_or_404(Colaborador, id=colaborador_id)
+    
+    return render(request, 'visualizar_colab.html', {'colaborador': colaborador})
+
 
 @login_required(login_url='login')
 def editar_colaborador(request, colaborador_id):
@@ -81,34 +102,39 @@ def editar_colaborador(request, colaborador_id):
             nome = form.cleaned_data['nome']
             cpf = form.cleaned_data['cpf']
             login = form.cleaned_data['login']
+            email = form.cleaned_data['email']
             senha = form.cleaned_data['senha']
             confirmar_senha = form.cleaned_data['confirmar_senha']
             situacao = form.cleaned_data['situacao']
 
-            # Verificação concluída
             if Colaborador.objects.filter(cpf=cpf).exclude(id=colaborador_id).exists():
                 messages.error(request, 'CPF já cadastrado.')
+                return redirect('editar_colaborador', colaborador_id=colaborador_id)
+
+            if Colaborador.objects.filter(email=email).exclude(id=colaborador_id).exists():
+                messages.error(request, 'Email já cadastrado.')
                 return redirect('editar_colaborador', colaborador_id=colaborador_id)
 
             if senha != confirmar_senha:
                 messages.error(request, 'A senha e a confirmação de senha não correspondem.')
                 return redirect('editar_colaborador', colaborador_id=colaborador_id)
 
-            # Verifica se a senha foi modificada
-            if senha:
-                # Criptografa a nova senha
-                senha_criptografada = make_password(senha)
-                colaborador.senha = senha_criptografada
-            else:
-                # Se a senha não foi modificada, define a senha atual do colaborador como vazia
-                colaborador.senha = ''
+            # Rest of your code for updating the collaborator
 
             try:
                 # Atualiza os dados do colaborador no banco de dados
                 colaborador.nome = nome
                 colaborador.cpf = cpf
                 colaborador.login = login
+                colaborador.email = email
                 colaborador.situacao = situacao
+
+                # Verifica se a senha foi modificada
+                if senha:
+                    # Criptografa a nova senha
+                    senha_criptografada = make_password(senha)
+                    colaborador.senha = senha_criptografada
+
                 colaborador.save()
 
                 # Additional logic to update other fields of the collaborator
@@ -123,11 +149,15 @@ def editar_colaborador(request, colaborador_id):
                 logging.exception(error_message)
                 return render(request, 'error.html', {'error_message': error_message})
     else:
-        # Se a requisição não for POST, passa a senha e a confirmação de senha como vazias para o formulário
-        initial_data = {'senha': '', 'confirmar_senha': ''}
+        # If the request is a GET request, provide the initial form data
+        initial_data = {
+            'senha': '',
+            'confirmar_senha': '',
+            'email': colaborador.email
+        }
         form = EditarColaboradorForm(instance=colaborador, initial=initial_data)
 
-        # Define a opção selecionada no campo de situação com base na situação atual do colaborador
+        # Define the option selected in the 'situacao' field based on the current collaborator's situation
         form.fields['situacao'].initial = colaborador.situacao
 
     return render(request, 'editar_colaborador.html', {'form': form, 'colaborador_id': colaborador_id})

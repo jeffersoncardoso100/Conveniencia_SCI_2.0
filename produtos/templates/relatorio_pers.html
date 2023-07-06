@@ -40,9 +40,9 @@
         </div>
         <div class="modal-backdrop" style="background-color: #2d3560;"></div>
 
-        
+
         <div id="myModal" class="modal">
-         
+
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="top-half"></div>
@@ -55,26 +55,30 @@
                     <form class="modal-form" method="POST" action="{% url 'relatorio_personalizado' %}">
                         {% csrf_token %}
 
+                      
                         <label for="colaborador">Colaborador:</label>
                         <select name="colaborador" id="colaborador">
+                            <option value="todos">Todos</option> <!-- Opção "Todos" com valor "todos" -->
                             {% for colaborador in colaboradores %}
                             <option value="{{ colaborador.id }}">{{ colaborador.nome }}</option>
                             {% endfor %}
                         </select>
+                </div>
+                <div>
 
-                        <br>
+                    <br>
 
-                        <label for="data_inicio">Data de Início:</label>
-                        <input type="date" name="data_inicio" id="data_inicio">
+                    <label for="data_inicio">Data de Início:</label>
+                    <input type="date" name="data_inicio" id="data_inicio">
 
-                        <br>
+                    <br>
 
-                        <label for="data_fim">Data de Fim:</label>
-                        <input type="date" name="data_fim" id="data_fim">
+                    <label for="data_fim">Data de Fim:</label>
+                    <input type="date" name="data_fim" id="data_fim">
 
-                        <br>
+                    <br>
 
-                        <input type="submit" value="Gerar Relatório">
+                    <input type="submit" value="Gerar Relatório">
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -82,7 +86,7 @@
                 </div>
             </div>
         </div>
-       
+
         <div class="mini-calendar">
             <div class="month">
                 {% now "F" %} {% now "Y" %}
@@ -98,95 +102,96 @@
         <div class="button-container">
             <button class="button" onclick="goBack()">Voltar</button>
             <button class="button" onclick="goHome()">Home</button>
-          </div>
-          
-          <script>
-            function goBack() {
-              window.history.back(); // Volta para a página anterior
-            }
-          
-            function goHome() {
-              window.location.href = "/"; // Redireciona para a página inicial
-            }
-          </script>
+        </div>
 
-</html>  <div id="navbar">
+        <script>
+            function goBack() {
+                window.history.back(); // Volta para a página anterior
+            }
+
+            function goHome() {
+                window.location.href = "/"; // Redireciona para a página inicial
+            }
+        </script>
+
+</html>
+<div id="navbar">
     {% include 'navBar.html' %}
 </div>
-        
-        <script>
-            // Função para preencher o mini calendário com os dias do mês atual
-            function fillCalendar() {
-                var date = new Date();
-                var year = date.getFullYear();
-                var month = date.getMonth() + 1;
 
-                // Obter o número de dias no mês atual
-                var daysInMonth = new Date(year, month, 0).getDate();
+<script>
+    // Função para preencher o mini calendário com os dias do mês atual
+    function fillCalendar() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
 
-                // Obter o dia da semana do primeiro dia do mês atual
-                var firstDayOfWeek = new Date(year, month - 1, 1).getDay();
+        // Obter o número de dias no mês atual
+        var daysInMonth = new Date(year, month, 0).getDate();
 
-                // Limpar o conteúdo da tabela do mini calendário
-                var calendarBody = document.getElementById("calendar-body");
-                calendarBody.innerHTML = "";
+        // Obter o dia da semana do primeiro dia do mês atual
+        var firstDayOfWeek = new Date(year, month - 1, 1).getDay();
 
-                // Preencher a tabela com os dias do mês
-                var day = 1;
-                for (var i = 0; i < 6; i++) {
-                    var row = document.createElement("tr");
+        // Limpar o conteúdo da tabela do mini calendário
+        var calendarBody = document.getElementById("calendar-body");
+        calendarBody.innerHTML = "";
 
-                    for (var j = 0; j < 7; j++) {
-                        if (i === 0 && j < firstDayOfWeek) {
-                            var cell = document.createElement("td");
-                        } else if (day > daysInMonth) {
-                            break;
-                        } else {
-                            var cell = document.createElement("td");
-                            cell.textContent = day;
+        // Preencher a tabela com os dias do mês
+        var day = 1;
+        for (var i = 0; i < 6; i++) {
+            var row = document.createElement("tr");
 
-                            if (day === date.getDate()) {
-                                cell.classList.add("current-day");
-                            }
+            for (var j = 0; j < 7; j++) {
+                if (i === 0 && j < firstDayOfWeek) {
+                    var cell = document.createElement("td");
+                } else if (day > daysInMonth) {
+                    break;
+                } else {
+                    var cell = document.createElement("td");
+                    cell.textContent = day;
 
-                            day++;
-                        }
-
-                        row.appendChild(cell);
+                    if (day === date.getDate()) {
+                        cell.classList.add("current-day");
                     }
 
-                    calendarBody.appendChild(row);
+                    day++;
                 }
+
+                row.appendChild(cell);
             }
 
-            // Chamar a função para preencher o mini calendário ao carregar a página
-            fillCalendar();
-        </script>
-        </script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                var modal = document.getElementById("myModal");
-                var openModalBtn = document.getElementById("openModalBtn");
-                var closeModalBtns = document.querySelectorAll(".close");
+            calendarBody.appendChild(row);
+        }
+    }
 
-                openModalBtn.onclick = function () {
-                    modal.style.display = "block";
-                };
+    // Chamar a função para preencher o mini calendário ao carregar a página
+    fillCalendar();
+</script>
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var modal = document.getElementById("myModal");
+        var openModalBtn = document.getElementById("openModalBtn");
+        var closeModalBtns = document.querySelectorAll(".close");
 
-                closeModalBtns.forEach(function (btn) {
-                    btn.onclick = function () {
-                        modal.style.display = "none";
-                    };
-                });
+        openModalBtn.onclick = function () {
+            modal.style.display = "block";
+        };
 
-                window.onclick = function (event) {
-                    if (event.target === modal) {
-                        modal.style.display = "none";
-                    }
-                };
-            });
-        </script>
+        closeModalBtns.forEach(function (btn) {
+            btn.onclick = function () {
+                modal.style.display = "none";
+            };
+        });
+
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    });
+</script>
 
 </body>
 

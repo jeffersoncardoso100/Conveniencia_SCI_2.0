@@ -6,7 +6,7 @@ class Colaborador(models.Model):
     login = models.CharField(max_length=50)
     senha = models.CharField(max_length=50)
     situacao = models.CharField(max_length=50)
-    
+    email = models.EmailField(max_length=254, null=True)
     
 
     def __str__(self):

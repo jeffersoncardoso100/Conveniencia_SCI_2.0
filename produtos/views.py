@@ -34,6 +34,7 @@ def cadastro_produtos(request):
             codigo_barras = form.cleaned_data['codigo_barras']
             preco_produto = form.cleaned_data['preco_produto']
             situacao = form.cleaned_data['situacao']
+            categoria = form.cleaned_data['categoria']
 
             try:
                 # Verificar se o código de barras já existe no banco de dados
@@ -48,7 +49,7 @@ def cadastro_produtos(request):
 
                 # Criar e salvar o produto com a situação definida pelo usuário
                 produto = Produto(
-                    nome=nome, codigo_barras=codigo_barras, preco_produto=preco_produto, situacao=situacao)
+                    nome=nome, codigo_barras=codigo_barras, preco_produto=preco_produto, situacao=situacao, categoria=categoria)
                 produto.save()
 
                 # Redirecionar para a página de sucesso
@@ -88,6 +89,7 @@ def editar_produto(request, produto_id):
                 produto.codigo_barras = form.cleaned_data['codigo_barras']
                 produto.preco_produto = form.cleaned_data['preco_produto']
                 produto.situacao = form.cleaned_data['situacao']
+                produto.categoria = form.cleaned_data['categoria']
 
                 # Verificar se o novo código de barras já está em uso por outro produto
                 if Produto.objects.filter(codigo_barras=produto.codigo_barras).exclude(id=produto_id).exists():
@@ -110,7 +112,8 @@ def editar_produto(request, produto_id):
             'nome': produto.nome,
             'codigo_barras': produto.codigo_barras,
             'preco_produto': produto.preco_produto,
-            'situacao': produto.situacao
+            'situacao': produto.situacao,
+            'categoria':produto.categoria
         })
 
     context = {
@@ -154,6 +157,8 @@ def relatorio_compras_pdf(request):
 
 
 @login_required(login_url='login')
+
+
 def relatorio_personalizado(request):
     if request.method == 'POST':
         colaborador_id = request.POST.get('colaborador')
@@ -167,14 +172,17 @@ def relatorio_personalizado(request):
         except ValueError:
             return HttpResponse("Datas inválidas.")
 
-        try:
-            # Verificar se o colaborador existe
-            colaborador = Colaborador.objects.get(id=colaborador_id)
-        except Colaborador.DoesNotExist:
-            raise Http404("Colaborador não encontrado.")
-
-        compras = Compra.objects.filter(
-            colaborador=colaborador, data_compra__range=[data_inicio, data_fim])
+        if colaborador_id == 'todos':
+            colaborador = None
+            compras = Compra.objects.filter(data_compra__range=[data_inicio, data_fim])
+        else:
+            try:
+                # Verificar se o colaborador existe
+                colaborador = Colaborador.objects.get(id=colaborador_id)
+                compras = Compra.objects.filter(
+                    colaborador=colaborador, data_compra__range=[data_inicio, data_fim])
+            except Colaborador.DoesNotExist:
+                raise Http404("Colaborador não encontrado.")
 
         # Cria o documento PDF
         buffer = BytesIO()
@@ -194,7 +202,10 @@ def relatorio_personalizado(request):
         elements.append(Spacer(1, 12))
 
         # Adiciona informações do colaborador e período de compra
-        nome_colaborador = colaborador.nome
+        if colaborador:
+            nome_colaborador = colaborador.nome
+        else:
+            nome_colaborador = "Todos os colaboradores"
         periodo_compra = f'Período de Compra: {data_inicio} a {data_fim}'
 
         # Adiciona as informações acima em um parágrafo
@@ -206,7 +217,7 @@ def relatorio_personalizado(request):
         elements.append(Spacer(1, 12))
 
         # Cria a tabela de compras
-        data = [['ID Compra', 'Data', 'Produto', 'Quantidade', 'Preço']]
+        data = [['ID Compra', 'Data', 'Colaborador', 'Produto', 'Quantidade', 'Preço']]
 
         for compra in compras:
             produtos_compra = ItemCompra.objects.filter(compra=compra)
@@ -215,6 +226,7 @@ def relatorio_personalizado(request):
                 data.append([
                     str(compra.pk),
                     str(compra.data_compra),
+                    str(compra.colaborador.nome),
                     str(produto_compra.produto.nome),
                     str(produto_compra.quantidade),
                     str(produto_compra.preco_total)
@@ -247,7 +259,6 @@ def relatorio_personalizado(request):
 
     colaboradores = Colaborador.objects.all()
     return render(request, 'relatorio_pers.html', {'colaboradores': colaboradores})
-
 
 @login_required(login_url='login')
 def gerar_relatorio_geral(request):

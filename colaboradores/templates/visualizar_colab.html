@@ -1,0 +1,28 @@
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="{% static 'formularios/edit_formulario.css' %}">
+    <meta name="autocomplete" content="off">
+</head>
+
+
+
+<div class="colaborador-details">
+    <h1>Dados do Colaborador</h1>
+    <p><strong>Nome:</strong> {{ colaborador.nome }}</p>
+    <p><strong>Email:</strong> {{ colaborador.email }}</p>
+    <p><strong>CPF:</strong> {{ colaborador.cpf }}</p>
+    <p><strong>Login:</strong> {{ colaborador.login }}</p>
+    <p><strong>Situação:</strong> {{ colaborador.situacao }}</p>
+    <!-- Adicione mais informações do colaborador conforme necessário -->
+</div>

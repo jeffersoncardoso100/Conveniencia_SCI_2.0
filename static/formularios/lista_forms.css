@@ -1,4 +1,5 @@
 /* Estilos globais */
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f7ff;
@@ -20,7 +21,7 @@ h1 {
   text-align: center;
   color: #1d1b31;
   font-size: 3rem;
-  margin-top: -52px !important;
+  margin-top: -52px;
   position: absolute;
   left: auto;
   right: 630px;
@@ -113,6 +114,7 @@ td .situation-dot.inactive {
 .search-form {
   margin-bottom: 20px;
   text-align: right;
+  margin-left: auto;
 }
 
 .search-input {
@@ -236,5 +238,106 @@ th:hover {
     flex-wrap: wrap;
     justify-content: space-evenly;
   }
+
+ 
+
+}.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 105%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 900px; /* Aumente o valor aqui para aumentar a largura máxima */
+  max-height: 90%; /* Aumente o valor aqui para aumentar a altura máxima */
+  overflow: auto;
+}
+
+.modal-close {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  float: right; /* Adiciona esta linha para alinhar à direita */
+}
+
+.modal-close:hover {
+  background-color: #d32f2f;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+
+.view-button {
+  background-color: #cbd8e6;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.view-button:hover {
+  background-color: #0056b3;
+}.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  text-align: center;
+}
+
+.filter-row .filter-container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
+  margin-left: 350px; /* Ajuste o valor conforme necessário */
+}
+
+.filter-container label {
+  margin-bottom: 5px;
+  text-align: center;
+  line-height: 38px;
+  color: #2d3560;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.filter-container select {
+  padding: 10px;
+  font-size: 20px;
+  border: 1px solid #430ef1;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #333333;
+  margin-top: 5px; /* Adicione essa propriedade para ajustar o alinhamento vertical */
+}
+
+.filter-container select:hover {
+  border-color: #007bff;
+}

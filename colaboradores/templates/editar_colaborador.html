@@ -49,6 +49,12 @@
             <p class="error-message">{{ form.login.errors | join:", " }}</p>
             {% endif %}
 
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ form.email.value }}">
+            {% if form.email.errors %}
+            <p class="error-message">{{ form.email.errors | join:", " }}</p>
+            {% endif %}
+
             <label for="senha">Senha</label>
             <div class="password-icon">
                 <input type="password" id="senha" name="senha" value="{{ form.senha.value }}">

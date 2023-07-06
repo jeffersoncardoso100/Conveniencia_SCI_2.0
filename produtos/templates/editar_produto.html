@@ -52,15 +52,28 @@
             {% if preco_produto_error %}
             <p class="error-message">{{ preco_produto_error }}</p>
             {% endif %}
-
-            <input type="hidden" name="preco_produto_decimal" id="preco_produto_decimal"
-                value="{{ form.preco_produto_decimal.value }}">
-                <label for="situacao">Situação:</label>
-                <select name="situacao" required>
-                    <option value="" disabled>Selecione uma opção</option>
-                    <option value="Ativo" {% if form.initial.situacao == 'Ativo' %}selected{% endif %}>Ativo</option>
-                    <option value="Inativo" {% if form.initial.situacao == 'Inativo' %}selected{% endif %}>Inativo</option>
-                </select><br>
+            <form>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="situacao">Situação:</label>
+                    <select name="situacao" required>
+                      <option value="" disabled>Selecione uma opção</option>
+                      <option value="Ativo" {% if form.initial.situacao == 'Ativo' %}selected{% endif %}>Ativo</option>
+                      <option value="Inativo" {% if form.initial.situacao == 'Inativo' %}selected{% endif %}>Inativo</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="categoria">Categoria:</label>
+                    <select name="categoria" id="categoria">
+                      <option value="alimentos" {% if form.categoria.value == 'alimentos' %}selected{% endif %}>Alimentos</option>
+                      <option value="bebidas" {% if form.categoria.value == 'bebidas' %}selected{% endif %}>Bebidas</option>
+                      <option value="roupa" {% if form.categoria.value == 'roupa' %}selected{% endif %}>Roupa</option>
+                      <option value="ingresso" {% if form.categoria.value == 'ingresso' %}selected{% endif %}>Ingresso</option>
+                      <option value="outros" {% if form.categoria.value == 'outros' %}selected{% endif %}>Outros</option>
+                    </select>
+                  </div>
+                </div>
+                
 
             <input type="submit" value="Cadastrar" class="submit-button">
         </form>

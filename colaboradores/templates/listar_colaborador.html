@@ -5,17 +5,16 @@
 <head>
     <title>Lista de Colaboradores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
 </head>
 
 <body>
-
-
     <div class="container">
         <div class="image-container">
             <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png">
-               
         </div>
         <h1>Colaboradores</h1>
         <a href="{% url 'criar_colaboradores' %}" class="create-link">
@@ -33,7 +32,7 @@
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>CPF</th>
+                        <th>Email</th>
                         <th>Login</th>
                         <th>Situação</th>
                         <th>Ações</th>
@@ -43,18 +42,25 @@
                     {% for colaborador in colaboradores %}
                     <tr>
                         <td>{{ colaborador.nome }}</td>
-                        <td>{{ colaborador.cpf }}</td>
+                        <td>{{ colaborador.email }}</td>
                         <td>{{ colaborador.login }}</td>
                         <td>
-                            <span class="situation-dot {% if colaborador.situacao == 'Ativo' %}active{% else %}inactive{% endif %}"></span>
+                            <span
+                                class="situation-dot {% if colaborador.situacao == 'Ativo' %}active{% else %}inactive{% endif %}"></span>
                             {{ colaborador.situacao }}
                         </td>
                         <td>
                             <div class="icon">
                                 <span class="show-icons">
-                                    <a href="{% url 'editar_colaborador' colaborador_id=colaborador.id %}" class="edit-link">
+                                    <a href="{% url 'editar_colaborador' colaborador_id=colaborador.id %}"
+                                        class="edit-link">
                                         <i class="fas fa-pencil-alt edit-icon"></i>
                                     </a>
+                                    <button class="view-button"
+                                        onclick="openModal('{{ colaborador.nome }}', '{{ colaborador.email }}', '{{ colaborador.login }}', '{{ colaborador.situacao }}', '{{ colaborador.cpf }}')">
+                                        <i class="fas fa-eye view-icon"></i>
+                                    </button>
+
                                 </span>
                             </div>
                         </td>
@@ -66,49 +72,82 @@
         <div class="button-container">
             <button class="button" onclick="goBack()">Voltar</button>
             <button class="button" onclick="goHome()">Home</button>
-          </div>
-          
-              
-        </table>
-        <div id="navbar">
-            {% include 'navBar.html' %}
         </div>
-        <div class="button-container">
-            <button class="button" onclick="goBack()">Voltar</button>
-            <button class="button" onclick="goHome()">Home</button>
-          </div>
-          
-          <script>
-            function goBack() {
-              window.history.back(); // Volta para a página anterior
-            }
-          
-            function goHome() {
-              window.location.href = "/"; // Redireciona para a página inicial
-            }
-          </script>
-          
-        <script>
-            //FUNÇÃO QUE FILTRA LETRAS E BUSCA OS NOMES
-            const searchInput = document.getElementById('search-input');
-            const searchButton = document.getElementById('search-button');
+    </div>
+    
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <h2>Dados do Colaborador</h2>
+            <table>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Login</th>
+                    <th>Situação</th>
+                    <th>CPF</th>
+                </tr>
+                <tr>
+                    <td><span id="modal-nome"></span></td>
+                    <td><span id="modal-email"></span></td>
+                    <td><span id="modal-login"></span></td>
+                    <td><span id="modal-situacao"></span></td>
+                    <td><span id="modal-cpf"></span></td>
+                </tr>
+            </table>
+            <button class="modal-close" onclick="closeModal()">Fechar</button>
+        </div>
+    </div>
 
-            searchButton.addEventListener('click', () => {
-                const searchTerm = searchInput.value.toLowerCase();
-                const tableRows = document.querySelectorAll('tbody tr');
 
-                tableRows.forEach(row => {
-                    const name = row.querySelector('td:first-child').textContent.toLowerCase();
-                    if (name.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            closeModal();
+        });
+
+        function openModal(nome, email, login, situacao, cpf) {
+            document.getElementById("modal-nome").textContent = nome;
+            document.getElementById("modal-email").textContent = email;
+            document.getElementById("modal-login").textContent = login;
+            document.getElementById("modal-situacao").textContent = situacao;
+            document.getElementById("modal-cpf").textContent = cpf;
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+
+        function goBack() {
+            window.history.back(); // Volta para a página anterior
+        }
+
+        function goHome() {
+            window.location.href = "/"; // Redireciona para a página inicial
+        }
+    </script>
+    <div id="navbar">
+        {% include 'navBar.html' %}
+    </div>
+    <script>
+        //FUNÇÃO QUE FILTRA LETRAS E BUSCA OS NOMES
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+
+        searchButton.addEventListener('click', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const tableRows = document.querySelectorAll('tbody tr');
+
+            tableRows.forEach(row => {
+                const name = row.querySelector('td:first-child').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
-
-        </script>
- 
+        });
+    </script>
 
 </body>
 

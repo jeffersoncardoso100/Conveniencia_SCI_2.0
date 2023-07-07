@@ -9,7 +9,7 @@ urlpatterns = [
     path('relatorio_perso/',views.relatorio_personalizado, name='relatorio_personalizado'),
     path('relatorio_compras_pdf/', views.relatorio_compras_pdf, name='relatorio_compras_pdf'),
     path('gerar_relatorio_geral/', views.gerar_relatorio_geral, name='gerar_relatorio_geral'),
-
+   
 
 ]
 

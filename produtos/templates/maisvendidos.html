@@ -1,0 +1,6 @@
+{% for produto in produtos_mais_vendidos %}
+    <div>
+        <h3>{{ produto.nome }}</h3>
+        <p>Quantidade vendida: {{ produto.itemcompra__count }}</p>
+    </div>
+{% endfor %}

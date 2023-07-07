@@ -12,7 +12,7 @@ urlpatterns = [
     path('valor_referencia_atual/', views.ValorReferenciaAtual, name='valor_referencia_atual'),
     path('visualizar_gastos/', views.VisualizarGastos, name='visualizar_gastos'),
     path('enviar_email/', views.enviar_email, name='enviar_email'),
-
+  
   
    
 ]

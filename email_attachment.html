@@ -44,13 +44,16 @@
     </style>
 </head>
 <body>
-
+    <div class="center-content">
+        <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png" alt="Logo" width="300vw" height="auto">
+    </div>
+    
     <div class="center-content">
         <h2 style="font-size: 2vw;">Comprovante de compra</h2>
     </div>
     
     <div class="center-content">
-        <p style="font-size: 1.5vw;">Colaborador: {{ nome_colaborador }}</p>
+        <p style="font-size: 1.5vw;">Colaborador: Jefferson</p>
     </div>
     
     
@@ -62,20 +65,20 @@
             </tr>
         </thead>
         <tbody>
-            {% for produto in produtos %}
+            
             <tr>
-                <td class="content-cell">{{ produto.nome }}</td>
-                <td class="content-cell">R$ {{ produto.preco_produto|floatformat:2 }}</td>
+                <td class="content-cell">Refrigerante Coca-Cola 600ml.</td>
+                <td class="content-cell">R$ 5.55</td>
             </tr>
-            {% endfor %}
+            
             <tr>
-                <td class="total content-cell" colspan="2">Valor total da compra: R$ {{ valor_total|floatformat:2 }}</td>
+                <td class="total content-cell" colspan="2">Valor total da compra: R$ 5.55</td>
             </tr>
         </tbody>
     </table>
     
     <div class="center-content">
-        <p style="font-size: 1vw;">Data e hora da compra: {{ data_hora_compra }}</p>
+        <p style="font-size: 1vw;">Data e hora da compra: 07/07/2023 09:56:24</p>
     </div>
 </body>
 

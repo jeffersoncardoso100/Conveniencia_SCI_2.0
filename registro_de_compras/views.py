@@ -60,19 +60,52 @@ def CadastrarCompra(request):
             produto_inativo_message = message
             break
 
+    
     return render(request, 'registro.html', {'carrinho': carrinho, 'valor_total': valor_total, 'colaboradores': colaboradores, 'produto_inativo_message': produto_inativo_message})
-
-
-
+"""
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
+from django.conf import settings
+import base64
+
+
+#função sem pdf
+
+def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra, nome_colaborador):
+    email_servidor = settings.EMAIL_HOST_USER
+
+    # Calcular o valor total da compra
+    valor_total = sum(produto.preco_produto for produto in produtos)
+
+    # Renderizar o template com as variáveis
+    context = {
+        'produtos': produtos,
+        'valor_total': valor_total,
+        'data_hora_compra': data_hora_compra,
+        'nome_colaborador': nome_colaborador
+    }
+    mensagem_html = render_to_string('email_template.html', context)
+
+    # Criar uma instância de EmailMultiAlternatives
+    email_message = EmailMultiAlternatives()
+    email_message.subject = assunto
+    email_message.from_email = email_servidor
+    email_message.to = [destinatario]
+    email_message.body = mensagem
+
+    # Adicionar o conteúdo HTML como uma alternativa ao corpo do email
+    email_message.attach_alternative(mensagem_html, 'text/html')
+
+    email_message.send()"""
+
+#função com pdf
 
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.conf import settings
+from weasyprint import HTML
 
-def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra, nome_colaborador, pdf_path):
+def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra, nome_colaborador):
     email_servidor = settings.EMAIL_HOST_USER
 
     # Calcular o valor total da compra
@@ -87,52 +120,20 @@ def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra, no
     }
     mensagem_html = render_to_string('email_template.html', context)
 
-    # Cria um objeto EmailMessage
-    email = EmailMessage(
-        subject=assunto,
-        body=mensagem,
-        from_email=email_servidor,
-        to=[destinatario],
-    )
+    # Converter o conteúdo HTML em PDF usando o weasyprint
+    pdf_bytes = HTML(string=mensagem_html).write_pdf()
 
-    # Anexa o PDF ao e-mail
-    with open(pdf_path, 'rb') as pdf_file:
-        email.attach('compra.pdf', pdf_file.read(), 'application/pdf')
+    # Criar uma instância de EmailMessage
+    email_message = EmailMessage()
+    email_message.subject = assunto
+    email_message.from_email = email_servidor
+    email_message.to = [destinatario]
+    email_message.body = mensagem
 
-    # Define o conteúdo HTML do e-mail
-    email.attach_alternative(mensagem_html, 'text/html')
+    # Anexar o PDF ao email
+    email_message.attach(f'comprovante_{data_hora_compra}.pdf', pdf_bytes, 'application/pdf')
 
-    # Envie o e-mail
-    email.send()
-
-
-"""
-
-
-def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra,nome_colaborador):
-    email_servidor = settings.EMAIL_HOST_USER
-
-    # Calcular o valor total da compra
-    valor_total = sum(produto.preco_produto for produto in produtos)
-
-    # Renderizar o template com as variáveis
-    context = {
-        'produtos': produtos,
-        'valor_total': valor_total,
-        'data_hora_compra': data_hora_compra,
-        'nome_colaborador': nome_colaborador
-    }
-    mensagem_html = render_to_string('email_template.html', context)
-
-    send_mail(
-        subject=assunto,
-        message=mensagem,
-        html_message=mensagem_html,
-        from_email=email_servidor,
-        recipient_list=[destinatario],
-        fail_silently=False
-       
-    )"""
+    email_message.send()
 
 
 def FinalizarCompra(request):
@@ -336,3 +337,7 @@ def VisualizarGastos(request):
 def ListarCompra(request):
     compras = Compra.objects.all()
     return render(request, 'listar_compras.html', {'compras': compras})
+
+
+from django.db.models import Count
+

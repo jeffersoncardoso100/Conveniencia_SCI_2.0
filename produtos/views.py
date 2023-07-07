@@ -1,4 +1,5 @@
 from datetime import datetime
+from operator import countOf
 from xhtml2pdf import pisa
 from io import BytesIO
 import decimal
@@ -317,3 +318,19 @@ def gerar_relatorio_geral(request):
         return HttpResponse('Formato de relatório inválido.')
 
     return response
+
+
+"""@login_required(login_url='login')
+def listar_mais_vendidos(request):
+    produtos_mais_vendidos = Produto.objects.annotate(total_vendido=countOf('itemcompra')).order_by('')[:5]
+
+    return render(request, 'maisvendidos.html', {'produtos_mais_vendidos': produtos_mais_vendidos})
+
+from datetime import date
+
+@login_required(login_url='login')
+def ListarCompra(request):
+    today = date.today()
+    compras = Compra.objects.filter(data_hora__date=today)
+    return render(request, 'listar_compras.html', {'compras': compras})
+ """

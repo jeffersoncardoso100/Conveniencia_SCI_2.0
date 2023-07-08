@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+
+  <title>Produtos em Estoque</title>
+  <!-- Adicione seus estilos CSS ou links para arquivos externos de CSS aqui -->
+</head>
+<body>
+  {% block content %}
+  <h2>Produtos em Estoque</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for produto_estoque in produtos_estoque %}
+      <tr>
+        <td>{{ produto_estoque.produto }}</td>
+        <td id="quantidade-{{ produto_estoque.produto.id }}">{{ produto_estoque.quantidade }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary btn-alterar-estoque" data-produto-id="{{ produto_estoque.produto.id }}">Alterar Estoque</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endblock %}
+
+  <!-- Modal de Alteração de Estoque -->
+  <div class="modal fade" id="modalAlterarEstoque" tabindex="-1" role="dialog" aria-labelledby="modalAlterarEstoqueLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAlterarEstoqueLabel">Alterar Estoque</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="formAlterarEstoque" method="POST" action="">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="novaQuantidade">Nova Quantidade:</label>
+              <input type="number" class="form-control" id="novaQuantidade" name="novo_valor" required>
+
+            </div>
+            <input type="hidden" id="produtoId" name="produtoId" value="">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      // Quando um botão de alteração de estoque for clicado, configure o evento click
+      $('.btn-alterar-estoque').click(function() {
+        var produtoId = $(this).data('produto-id');
+        var quantidade = $('#quantidade-' + produtoId).text();
+        $('#produtoId').val(produtoId);
+        $('#novaQuantidade').val(quantidade);
+        $('#modalAlterarEstoque').modal('show');
+      });
+
+      // Quando o formulário for enviado, configure o evento submit
+      $('#formAlterarEstoque').submit(function(e) {
+        e.preventDefault();
+        var novaQuantidade = $('#novaQuantidade').val();
+        var produtoId = $('#produtoId').val();
+        var url = '/estoque/alterar/' + produtoId + '/';
+        
+        $.ajax({
+          type: 'POST',
+          url: url,
+          data: {
+            novaQuantidade: novaQuantidade,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          },
+          success: function(response) {
+            // Exiba uma mensagem de sucesso
+            alert(response);
+            // Atualize a quantidade exibida na tabela
+            $('#quantidade-' + produtoId).text(novaQuantidade);
+            // Feche o modal
+            $('#modalAlterarEstoque').modal('hide');
+          },
+          error: function(xhr) {
+            // Exiba uma mensagem de erro, se houver
+            alert(xhr.responseText);
+          }
+        });
+      });
+    });
+  </script>
+  <!-- Adicione seus scripts JavaScript ou links para arquivos externos de JavaScript aqui -->
+</body>
+</html>

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'produtos',
     'registro_de_compras',
     'navBar',
+    'estoque',
     
    
 ]

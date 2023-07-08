@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.test import TransactionTestCase
 
 from Conveniencia_SCI_2_0 import settings
+from estoque.models import Estoque
 from .models import Compra, ItemCompra, Produto, Colaborador
 from django.db.models import F
 from django.db import transaction
@@ -218,6 +219,14 @@ def FinalizarCompra(request):
         # Obtém os valores atualizados
         valor_gasto_ultima_referencia = ValorReferenciaAnterior(colaborador)
         valor_gasto_mes_atual = ValorReferenciaAtual(colaborador)
+    # Deduzir os itens comprados do estoque
+    for produto, quantidade in produtos_quantidades.items():
+        try:
+            estoque = Estoque.objects.get(produto=produto)
+            estoque.quantidade -= quantidade
+            estoque.save()
+        except Estoque.DoesNotExist:
+            messages.warning(request, f"Produto '{produto.nome}' não encontrado no estoque.")
 
         destinatario = colaborador.email
         assunto = 'Compra realizada com sucesso'
@@ -226,6 +235,7 @@ def FinalizarCompra(request):
 
         enviar_email(destinatario, assunto, mensagem,
                      carrinho, data_hora_atual, colaborador.nome)
+        
 
         return render(request, 'registro.html', {
             'valor_gasto_ultima_referencia': valor_gasto_ultima_referencia,

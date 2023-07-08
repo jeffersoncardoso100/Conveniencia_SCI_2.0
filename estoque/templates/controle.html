@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <title>Controle de Estoque</title>
+  <!-- Adicione seus estilos CSS ou links para arquivos externos de CSS aqui -->
+  <style>
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .card-body {
+      margin-top: 10px;
+    }
+
+    /* Estilo adicional para cards com estoque baixo */
+    .card-estoque-baixo {
+      background-color: #ffcccc;
+    }
+  </style>
+</head>
+<body>
+  {% block content %}
+  <h2>Controle de Estoque</h2>
+  <div class="container">
+    <div class="row">
+      {% for produto_estoque in produtos_estoque %}
+      {% if produto_estoque.quantidade <= 3 %}
+      <div class="col-md-4">
+        <div class="card {% if produto_estoque.quantidade < 3 %}card-estoque-baixo{% endif %}">
+          <div class="card-title">{{ produto_estoque.produto }}</div>
+          <div class="card-body">
+            <p>Quantidade: {{ produto_estoque.quantidade }}</p>
+            {% if produto_estoque.quantidade >= 3 %}
+            <p class="text-success">Disponível</p>
+            {% else %}
+            <p class="text-danger">Estoque Baixo</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endblock %}
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+  <!-- Adicione seus scripts JavaScript ou links para arquivos externos de JavaScript aqui -->
+</body>
+</html>

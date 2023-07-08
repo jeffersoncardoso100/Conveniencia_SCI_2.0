@@ -1,6 +1,6 @@
 from datetime import datetime
 from operator import countOf
-from xhtml2pdf import pisa
+# from xhtml2pdf import pisa
 from io import BytesIO
 import decimal
 from django.forms import ValidationError
@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from colaboradores.models import Colaborador
+import estoque
 from produtos.forms import CadastrarProdutos
 from produtos.models import Produto
 from produtos.forms import EditarProdutosForm
@@ -24,6 +25,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Spacer, Paragraph, Table, TableStyle
+from estoque.models import Estoque
 
 
 @login_required(login_url='login')
@@ -52,6 +54,8 @@ def cadastro_produtos(request):
                 produto = Produto(
                     nome=nome, codigo_barras=codigo_barras, preco_produto=preco_produto, situacao=situacao, categoria=categoria)
                 produto.save()
+                estoque = Estoque(produto=produto,quantidade=0)
+                estoque.save()
 
                 # Redirecionar para a página de sucesso
                 # Substitua 'listar_produtos' pela URL ou nome da página de listagem de produtos
@@ -80,6 +84,7 @@ def listar_produtos(request):
 @login_required(login_url='login')
 def editar_produto(request, produto_id):
     produto = get_object_or_404(Produto, id=produto_id)
+    estoque = Estoque.objects.get(produto=produto)
 
     if request.method == 'POST':
         form = EditarProdutosForm(request.POST)
@@ -98,6 +103,9 @@ def editar_produto(request, produto_id):
 
                 produto.save()
 
+                # Processar os dados do formulário de estoque e salvar as alterações no objeto de estoque
+
+
                 # Redirecionar para outra página ou fazer qualquer outra ação necessária
                 return redirect('listar_produtos')
             except ValidationError as e:
@@ -114,7 +122,8 @@ def editar_produto(request, produto_id):
             'codigo_barras': produto.codigo_barras,
             'preco_produto': produto.preco_produto,
             'situacao': produto.situacao,
-            'categoria':produto.categoria
+            'categoria': produto.categoria,
+            'quantidade_estoque': estoque.quantidade
         })
 
     context = {
@@ -123,6 +132,7 @@ def editar_produto(request, produto_id):
     }
 
     return render(request, 'editar_produto.html', context)
+
 
 
 @login_required(login_url='login')

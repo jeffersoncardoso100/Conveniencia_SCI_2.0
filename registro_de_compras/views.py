@@ -135,7 +135,11 @@ def enviar_email(destinatario, assunto, mensagem, produtos, data_hora_compra, no
     email_message.attach(f'comprovante_{data_hora_compra}.pdf', pdf_bytes, 'application/pdf')
 
     email_message.send()
-
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import transaction
+import datetime
 
 def FinalizarCompra(request):
     if request.method == 'POST':
@@ -151,7 +155,8 @@ def FinalizarCompra(request):
             if not check_password(senha, colaborador.senha):
                 raise Colaborador.DoesNotExist
         except Exception as e:
-            if 'Colaborador' in str(e) : messages.error(request, 'Credenciais inválidas')
+            if 'Colaborador' in str(e):
+                messages.error(request, 'Credenciais inválidas')
             return redirect('cadastrar_compra')
 
         # Verifique a situação do colaborador apenas se o objeto colaborador for encontrado
@@ -219,14 +224,15 @@ def FinalizarCompra(request):
         # Obtém os valores atualizados
         valor_gasto_ultima_referencia = ValorReferenciaAnterior(colaborador)
         valor_gasto_mes_atual = ValorReferenciaAtual(colaborador)
-    # Deduzir os itens comprados do estoque
-    for produto, quantidade in produtos_quantidades.items():
-        try:
-            estoque = Estoque.objects.get(produto=produto)
-            estoque.quantidade -= quantidade
-            estoque.save()
-        except Estoque.DoesNotExist:
-            messages.warning(request, f"Produto '{produto.nome}' não encontrado no estoque.")
+
+        # Deduzir os itens comprados do estoque
+        for produto, quantidade in produtos_quantidades.items():
+            try:
+                estoque = Estoque.objects.get(produto=produto)
+                estoque.quantidade -= quantidade
+                estoque.save()
+            except Estoque.DoesNotExist:
+                messages.warning(request, f"Produto '{produto.nome}' não encontrado no estoque.")
 
         destinatario = colaborador.email
         assunto = 'Compra realizada com sucesso'
@@ -235,7 +241,22 @@ def FinalizarCompra(request):
 
         enviar_email(destinatario, assunto, mensagem,
                      carrinho, data_hora_atual, colaborador.nome)
-        
+
+        # Check if the purchased products include an "ingresso" type
+        if any(produto.categoria == 'ingresso' for produto in carrinho):
+            # Send a separate email to another person with the ticket information
+            destinatario_ingresso = 'tatianibonecher@gmail.com'  # Replace with the actual recipient's email address
+            assunto_ingresso = 'Ingresso adquirido'
+            mensagem_ingresso = f'Você adquiriu um ingresso. Detalhes da compra:\n'
+
+            # Add purchase details for the "ingresso" products
+            for produto, quantidade in produtos_quantidades.items():
+                if produto.categoria == 'ingresso':
+                    mensagem_ingresso += f'Nome do ingresso: {produto.nome}\n'
+                    mensagem_ingresso += f'Quantidade: {quantidade}\n'
+                    mensagem_ingresso += f'Preço unitário: {produto.preco_produto}\n\n'
+
+            send_mail(assunto_ingresso, mensagem_ingresso, 'testeacademia@sci.com.br', [destinatario_ingresso])
 
         return render(request, 'registro.html', {
             'valor_gasto_ultima_referencia': valor_gasto_ultima_referencia,

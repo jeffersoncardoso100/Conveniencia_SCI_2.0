@@ -1,139 +1,139 @@
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
+ body {
+    margin: 0;
+    padding: 0;
+}
 
-    .sidebar {
-        height: 100vh;
-        width: 230px;
-        /* Ajuste a largura conforme necessário */
-        background-color: #1d1b31;
-        position: fixed;
-        left: 0;
-        top: 0;
-        overflow-x: hidden;
-        padding-top: 20px;
-        transition: width 0.5s ease;
-    }
+.sidebar {
+    height: 100vh;
+    width: 230px;
+    /* Ajuste a largura conforme necessário */
+    background-color: #1d1b31;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adicione esta linha para a sombra preta */
+}
 
-    .sidebar.collapsed {
-        width: 60px;
-    }
+.sidebar.collapsed {
+    width: 60px;
+}
 
-    .sidebar a {
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        text-decoration: none;
-        color: #fff;
-        transition: background-color 0.3s ease;
-    }
+.sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    line-height: 24px; /* Ajuste a altura da linha entre os elementos */
+}
 
-    .sidebar a:hover {
-        background-color: #91d8f8;
-    }
+.sidebar a:hover {
+    background-color: #91d8f8;
+}
 
-    .sidebar a i {
-        margin-right: 12px;
-        font-size: 20px;
-    }
+.sidebar a i {
+    margin-right: 12px;
+    font-size: 20px;
+    color: #91d8f8; /* Adicione esta linha para definir a cor do ícone como amarelo */
+}
 
-    .sidebar a:first-child {
-        margin-top: 40px;
-    }
+.sidebar a:first-child {
+    margin-top: 40px;
+}
 
-    .sidebar .time {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 16px;
-        text-align: center;
-    }
+.sidebar .time {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 16px;
+    text-align: center;
+    line-height: 24px; /* Ajuste a altura da linha do horário */
+}
 
-    .content {
-        margin-left: 250px;
-        /* Ajuste a margem conforme necessário */
-        padding: 16px;
-        height: 1000px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+.content {
+    margin-left: 250px;
+    /* Ajuste a margem conforme necessário */
+    padding: 16px;
+    height: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-    .dark-theme {
-        background-color: #111;
-        color: #fff;
-    }
+.dark-theme {
+    background-color: #111;
+    color: #fff;
+}
 
-    .dark-theme .sidebar a {
-        color: #fff;
-    }
+.dark-theme .sidebar a {
+    color: #fff;
+}
 
-    .dark-theme .sidebar .time {
-        color: #fff;
-    }
+.dark-theme .sidebar .time {
+    color: #fff;
+}
 
-    .logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 
-    .logo img {
-        max-width: 150px;
-        height: auto;
-    }
+.logo img {
+    max-width: 150px;
+    height: auto;
+}
 
-    .theme-toggle {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: center;
-    }
+.theme-toggle {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
 
-    .theme-toggle button {
-        padding: 8px 16px;
-        background-color: #333;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+.theme-toggle button {
+    padding: 8px 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-    .theme-toggle button:hover {
-        background-color: #555;
-    }
+.theme-toggle button:hover {
+    background-color: #555;
+}
 
-    .sidebar a i {
-        margin-right: 22px;
-        padding: 8px;
-        font-size: 18px;
-    }
+.collapse-button {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    background-color: #1d1b31;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 20px;
+    padding: 8px 12px;
+}
+
+.collapse-button:hover {
+    background-color: #555;
+}
 
 
-    .collapse-button {
-        padding: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-        background-color: #1d1b31;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        font-size: 20px;
-        padding: 8px 12px;
-    }
 
-    .collapse-button:hover {
-        background-color: #555;
-    }
 </style>
 </head>
 
@@ -147,10 +147,7 @@
             <span class="sidebar-text">Home</span>
 
         </a>
-        <a href="{% url 'logout' %}">
-            <i class="fas fa-sign-out-alt"></i>
-            <span class="sidebar-text">Logout</span>
-        </a>
+       
         {% if user.is_superuser %}
         <a href="{% url 'listar_usuarios' %}">
             <i class="fas fa-users"></i>
@@ -173,11 +170,20 @@
             <i class="fas fa-cart-plus"></i>
             <span class="sidebar-text">Estoque</span>
         </a>
-        <a href="{% url 'controle_estoque' %}">
+        
+        <a href="{% url 'listar_compra' %}">
             <i class="fas fa-cart-plus"></i>
             <span class="sidebar-text">Listar Compra</span>
         </a>
-
+        <a href="{% url 'movimentacao_estoque' %}">
+            <i class="fas fa-cart-plus"></i>
+            <span class="sidebar-text">Movimentação</span>
+        </a>
+        <a href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="sidebar-text">Logout</span>
+        </a>
+      
         
 
         <button class="collapse-button" onclick="toggleSidebar()">

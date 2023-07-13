@@ -1,255 +1,361 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>Minha Página Inicial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+   
     <style>
-        /* Estilos para o layout do grid */
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-        }
-
-        .grid {
-            display: grid;
-            grid-gap: 20px;
-        }
-
-        .widget {
-    background-color: rgba(29, 27, 49, 0.8); /* Cor com transparência */
-    color: #ffffff;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(255, 252, 252, 0.1);
-    text-align: center;
-    transition: background-color 0.3s;
-}
-
-
-        .widget:hover {
-            background-color: #888888;
-        }
-
-        .widget-title {
-            font-size: 24px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        .widget-content {
-            font-size: 20px;
-        }
-
-        .widget-icon {
-            font-size: 60px;
-            color: #ffffff;
-            margin-bottom: 10px;
-        }
-
-        /* Estilos para o tema dark */
+        /* Adicione o estilo CSS personalizado aqui */
         body {
-            background-color: #f9f9f9;
-            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f7ff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+           
         }
 
-
-        .content {
-            margin: 0 20px;
-        }
-
-        /* Estilos do calendário e relógio */
-        .calendar-widget {
+        .container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-        }
-
-        /* Estilos para a hora de Brasília */
-        .brasil-time {
-            background-color: #1d1b31;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            align-items: flex-start;
+            height: 90vh;
             text-align: center;
-            margin-bottom: 20px;
-            grid-column: span 3;
+            margin-top: -150px; /* Ajuste a margem superior conforme necessário */
+            margin-left: 310px /* Posiciona à direita */
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: flex-end; /* Alinha à direita */
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: -100px;
+            margin: 0 auto; /* Centraliza horizontalmente */
+        }
+
+        .card {
+            width: 370px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 20px;
+            background-color: #1d1b31;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 20px;
             color: #ffffff;
-            font-size: 18px;
-            margin-bottom: 10px;
         }
 
-        .brasil-time-content {
-            font-size: 34px;
+        .card-body {
+            padding: 20px;
         }
 
+        .card-body ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        
         .image-container {
             text-align: center;
-            margin-bottom: -100px;
+            margin-bottom: 40px;
         }
 
         .image-container img {
-            max-width: 250px;
-            margin-top: -90px;
-            /* Ajuste o valor conforme necessário */
+            max-width: 200px;
+            margin-top: -10px;
+            margin-left: 475px; /* Adiciona margem à esquerda para mover a imagem para a direita */
+            display: block; /* Adiciona display block para centralizar a imagem horizontalmente */
         }
 
-        /* Estilos para as anotações manuais */
-        .notes-widget {
-            background-color: #191a1b;
+        .card-body ul li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body ul li .product {
+            font-weight: bold;
+        }
+
+        .card-body ul li .quantity {
+            background-color: #f9c57e;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .card-estoque-vermelho .card-body ul li .quantity {
+            background-color: #ff7272;
+        }
+
+        #grafico-container {
+            display: flex; /* Altera o display para flex */
+            justify-content: space-between; /* Adiciona espaçamento entre os gráficos */
+            width: 700px; /* Ajuste o valor conforme necessário */
+            height: 300px;
+            margin-top: -950px; /* Ajuste a margem superior conforme necessário */
+        }
+
+        .card-body {
             padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            grid-column: span 3;
-            color: #333;
+            overflow-y: scroll;
+            max-height: 180px; /* Ajuste a altura máxima do scroll conforme necessário */
         }
 
-        .notes-widget textarea {
-            width: 90%;
-            height: 50px;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            border: none;
-            resize: none;
+        /* Adicione o estilo para o gráfico de pizza */
+        .chart-container {
+            width: 300px;
+            height: 300px;
         }
+        .quantity-green {
+    background-color: #9acd32;
+    color: #ffffff;
+    padding: 3px 8px;
+    border-radius: 5px;
+    display: inline-block;
+}
 
-        .notes-widget textarea {
-            font-size: 28px;
-            /* Defina o tamanho de fonte desejado */
-        }
+
+
+
+
+
+
     </style>
 </head>
-<div class="container">
-    <div class="image-container">
-        <img src="https://play-lh.googleusercontent.com/9e45qe2MZmk9WPYsm3U73ZdXdlazqQRkUYPuijdfYVt_Hqho4yEeKYdcbOX4wdmEzA"
-            alt="Logo">
-    </div>
-    <div class="navbar">
-        <div class="navbar-brand"></div>
-        <div>, {{ username }}!</div>
-    </div>
 
+<body>
     <div class="container">
-        <div class="grid">
-            <div class="brasil-time">
-                <h2 class="brasil-time-title">Conveniência SCI 2.0</h2>
-                <p class="brasil-time-content" id="brasil-time"></p>
-                <p class="brasil-time-content" id="brasil-date"></p>
+        <div class="image-container">
+            <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png">
+        </div>
+        <div class="card-container">
+            <!-- Card de Estoque Vermelho -->
+            <div class="card card-estoque-vermelho">
+                <div class="card-header">
+                    <h2 class="card-title">Estoque Baixo</h2>
+                    <span class="quantity-total">{{ quantidade_total_estoque_baixo }}</span>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for produto_estoque in produtos_estoque %}
+                        {% if produto_estoque.quantidade <= 3 %}
+                        <li>
+                            <span class="product">{{ produto_estoque.produto }}</span>
+                            <span class="quantity">{{ produto_estoque.quantidade }}</span>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-
-            {% block content %}
-            <!-- Seu código HTML existente -->
-
-            <div class="widget">
-                <a href="{% url 'listar_compra' %}" class="widget-link">
-                    <i class="fas fa-shopping-cart widget-icon"></i>
-                    <h2 class="widget-title">Compras</h2>
-                </a>
+    
+            <!-- Card de Estoque Amarelo -->
+            <div class="card card-estoque-amarelo">
+                <div class="card-header">
+                    <h2 class="card-title">Estoque em Alerta</h2>
+                    <span class="quantity-total">{{ quantidade_total_estoque_alerta }}</span>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for produto_estoque in produtos_estoque %}
+                        {% if 4 <= produto_estoque.quantidade and produto_estoque.quantidade <= 6 %}
+                        <li>
+                            <span class="product">{{ produto_estoque.produto }}</span>
+                            <span class="quantity">{{ produto_estoque.quantidade }}</span>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-
-
-            <div class="widget">
-                <a href="{% url 'listar_colaboradores' %}" class="widget-link">
-                    <i class="fas fa-users widget-icon"></i>
-                    <h2 class="widget-title">Colabs</h2>
-                </a>
-                <span id="notification" class="widget-notification"></span>
+            <div class="card card-vendidos-hoje">
+                <div class="card-header">
+                    <h2 class="card-title">Produtos Vendidos Hoje</h2>
+                    <span class="quantity-total">{{ quantidade_total_vendidos_hoje }}</span>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for produto_vendido in produtos_vendidos_hoje %}
+                        <li>
+                            <span class="product">{{ produto_vendido.0 }}</span>
+                            <span class="quantity-green">{{ produto_vendido.1 }}</span>
+                        </li>
+                        {% empty %}
+                        <li>Nenhum produto vendido hoje</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            
+        </div>
+    
 
-            <div class="widget">
-                <a href="{% url 'relatorio_compras_pdf' %}" class="widget-link">
-                    <i class="fas fa-chart-bar widget-icon"></i>
-                    <h2 class="widget-title">Relatorios</h2>
-                </a>
+        <!-- Seu código HTML existente -->
+        <div class="content">
+            <!-- Conteúdo adicional da página -->
+        </div>
+
+        <!-- Gráfico de Produtos Mais Vendidos -->
+        <div id="grafico-container">
+            <div class="chart-container">
+                <canvas id="bar-chart"></canvas>
             </div>
-
-
-            <!-- Mais código HTML -->
-
-            {% endblock %}
-
-            <div class="widget">
-                <a href="{% url 'listar_produtos' %}" class="widget-link">
-                    <i class="fas fa-shopping-basket widget-icon"></i>
-                    <h2 class="widget-title">Produtos</h2>
-                </a>
+            <div class="chart-container">
+                <canvas id="pie-chart"></canvas>
             </div>
+        </div>
+
+    </div>
+    <div id="calendar"></div>
+
+    <!-- Card de Produtos Vendidos Hoje -->
+    <!-- Card de Produtos Vendidos Hoje -->
 
 
-            <div class="widget">
-                <a href="{% url 'cadastrar_compra' %}" class="widget-link">
-                    <i class="fas fa-store widget-icon"></i>
-                    <h2 class="widget-title">
-                        Conveniência</h2>
-                </a>
-            </div>
-            <div class="widget">
-                <a href="https://sci.com.br/?gclid=Cj0KCQjwtO-kBhDIARIsAL6LoreM2ebmvNJjJI7I6hVDvdxjmK-Om9ahIxhdK5x229mBcLquEpppNgYaAhP1EALw_wcB"
-                    class="widget-link">
-                    <i class="fas fa-building widget-icon"></i>
-                    <h2 class="widget-title">SCI</h2>
-                </a>
-            </div>
+    <div id="navbar">
+        {% include 'navBar.html' %}
+    </div>
+    
+<!-- Adicione este código dentro da tag <script> no seu arquivo HTML -->
 
-
-            <div class="notes-widget">
-                <textarea id="notesTextarea"></textarea>
-            </div>
-
-
-            <div class="content">
-                <!-- Conteúdo adicional da página -->
-            </div>
-            <div id="navbar">
-                {% include 'navBar.html' %}
-            </div>
-
-            
-            <script>
-                var notification = document.getElementById('notification');
-notification.textContent = 'Nova notificação';
-                // Obtém o elemento <textarea>
-                var notesTextarea = document.getElementById('notesTextarea');
-
-                // Verifica se há um valor salvo no localStorage e preenche o <textarea> com esse valor, se existir
-                var savedNotes = localStorage.getItem('savedNotes');
-                if (savedNotes) {
-                    notesTextarea.value = savedNotes;
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(window).scroll(function() {
+                var scrollPosition = $(window).scrollTop();
+                var triggerOffset = $(".card-container").offset().top; // Defina a margem que irá acionar o scroll
+    
+                if (scrollPosition > triggerOffset) {
+                    $(".card").addClass("scroll-enabled");
+                } else {
+                    $(".card").removeClass("scroll-enabled");
                 }
+            });
+        });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dados do gráfico
+        var labels = ["Refrigerante", "Ingresso", "Chocolate"];
+        var vendas = [50, 30, 20];
 
-                // Evento 'input' para detectar quando o texto é alterado no <textarea>
-                notesTextarea.addEventListener('input', function (event) {
-                    // Obtém o valor do <textarea> após a alteração
-                    var newNotes = event.target.value;
+        // Configurações do gráfico
+        var config = {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+    label: 'Quantidade Vendida',
+    data: vendas,
+    backgroundColor: 'rgba(0, 31, 63, 0.5)', // Azul escuro
+    borderColor: 'rgba(0, 31, 63, 1)', // Azul escuro
+    borderWidth: 1
+}]
 
-                    // Salva o novo valor no localStorage
-                    localStorage.setItem('savedNotes', newNotes);
-                });
-
-                function updateClock() {
-                    var date = new Date();
-                    var options = { hour12: false, timeZone: 'America/Sao_Paulo' };
-                    var brasilTime = date.toLocaleTimeString('en-US', options);
-                    document.getElementById('brasil-time').textContent = brasilTime;
-
-                    var brasilDate = formatDate(date);
-                    document.getElementById('brasil-date').textContent = brasilDate;
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
+            }
+        };
 
-                function formatDate(date) {
-                    var day = date.getDate();
-                    var month = date.getMonth() + 1;
-                    var year = date.getFullYear();
-                    return `${day}/${month}/${year}`;
+        // Renderizar o gráfico no elemento canvas
+        var graficoElement = document.getElementById('grafico');
+        var grafico = new Chart(graficoElement, config);
+
+        function goBack() {
+            window.history.back(); // Volta para a página anterior
+        }
+
+        function goHome() {
+            window.location.href = "/"; // Redireciona para a página inicial
+        }
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dados do gráfico de barras
+    var labelsBar = ["Refrigerante", "Ingresso", "Chocolate"];
+    var vendasBar = [50, 30, 20];
+
+    // Configurações do gráfico de barras
+    var configBar = {
+        type: 'bar',
+        data: {
+            labels: labelsBar,
+            datasets: [{
+                label: 'Quantidade Vendida',
+                data: vendasBar,
+                backgroundColor: 'rgba(0, 31, 63, 0.5)', // Azul escuro
+                borderColor: 'rgba(0, 31, 63, 1)', // Azul escuro
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
+            }
+        }
+    };
 
-                setInterval(updateClock, 1000);
-            </script>
-            </body>
+    // Renderizar o gráfico de barras no elemento canvas
+    var barChartElement = document.getElementById('bar-chart');
+    var barChart = new Chart(barChartElement, configBar);
+
+    // Dados do gráfico de pizza
+    var labelsPie = ["Refrigerante", "Ingresso", "Chocolate"];
+    var vendasPie = [50, 30, 20];
+
+    // Configurações do gráfico de pizza
+    var configPie = {
+        type: 'pie',
+        data: {
+            labels: labelsPie,
+            datasets: [{
+                data: vendasPie,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)', // Vermelho claro
+                    'rgba(54, 162, 235, 0.5)', // Azul claro
+                    'rgba(255, 206, 86, 0.5)' // Amarelo claro
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', // Vermelho escuro
+                    'rgba(54, 162, 235, 1)', // Azul escuro
+                    'rgba(255, 206, 86, 1)' // Amarelo escuro
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    };
+
+    // Renderizar o gráfico de pizza no elemento canvas
+    var pieChartElement = document.getElementById('pie-chart');
+    var pieChart = new Chart(pieChartElement, configPie);
+</script>
+</body>
 
 </html>

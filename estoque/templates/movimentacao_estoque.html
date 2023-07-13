@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        h1 {
+            margin-top: -52px !important;
+           
+        }
+        .search-input {
+  margin-top: -30px;
+}
+.filter-container label {
+  display: inline-block;
+  margin-top: 39px; /* Ajuste o valor conforme necessário */
+}
+
+.filter-row {
+  margin-left: 275px !important;
+}
+
+    </style>
+    <title>Controle de estoque</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png">
+        </div>
+        <h1>Controle de estoque</h1>
+       
+        <div class="filter-row">
+            <div class="filter-container">
+                <label for="categoria-select"></label>
+                <select name="categoria" id="categoria-select">
+                    <option value="">Todos</option>
+                    <option value="entrada">Entrada</option>
+                    <option value="baixa">Baixa</option>
+                    
+                </select>
+            </div>
+            <div class="search-form">
+                <input type="text" id="search-input" class="search-input" placeholder="Digite o nome do Produto">
+                <button type="button" id="search-button" class="search-button">
+                    <i class="fas fa-search search-icon"></i>
+                </button>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Tipo de Movimentação</th>
+                        <th>Data</th>
+                        <th>Usuário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for movimentacao in movimentacoes|dictsortreversed:'data' %}
+                    <tr data-categoria="{{ movimentacao.tipo_movimentacao }}">
+                        <td>{{ movimentacao.produto }}</td>
+                        <td>{{ movimentacao.quantidade }}</td>
+                        <td>
+                            {% if movimentacao.tipo_movimentacao == 'entrada' %}
+                            Entrada
+                            {% else %}
+                            Baixa
+                            {% endif %}
+                        </td>
+                        <td>{{ movimentacao.data }}</td>
+                        <td>{{ movimentacao.usuario.username }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">Sem movimentações de estoque</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+        </div>
+        <div class="button-container">
+            <button class="button" onclick="goBack()">Voltar</button>
+            <button class="button" onclick="goHome()">Home</button>
+        </div>
+    </div>
+        <div id="navbar">
+            {% include 'navBar.html' %}
+        </div>
+        <script>
+            function goBack() {
+                window.history.back(); // Volta para a página anterior
+            }
+
+            function goHome() {
+                window.location.href = "/"; // Redireciona para a página inicial
+            }
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const searchInput = document.getElementById('search-input');
+                const searchButton = document.getElementById('search-button');
+                const tableRows = document.querySelectorAll('tbody tr');
+
+                searchButton.addEventListener('click', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+
+                    tableRows.forEach(row => {
+                        const name = row.cells[0].textContent.toLowerCase();
+                        if (name.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+
+                const icons = document.querySelectorAll('.show-icons');
+
+                icons.forEach(icon => {
+                    const editIcon = icon.querySelector('.edit-icon');
+
+                    icon.addEventListener('click', () => {
+                        editIcon.classList.toggle('active');
+                    });
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const categoriaSelect = document.getElementById('categoria-select');
+                const searchInput = document.getElementById('search-input');
+                const tableRows = document.querySelectorAll('tbody tr');
+
+                categoriaSelect.addEventListener('change', () => {
+                    const selectedCategoria = categoriaSelect.value.toLowerCase();
+                    const searchTerm = searchInput.value.toLowerCase();
+
+                    tableRows.forEach(row => {
+                        const nome = row.cells[0].textContent.toLowerCase();
+                        const categoria = row.dataset.categoria.toLowerCase();
+
+                        if ((nome.includes(searchTerm) || searchTerm === '') && (selectedCategoria === '' || categoria === selectedCategoria)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+
+</body>
+
+</html>

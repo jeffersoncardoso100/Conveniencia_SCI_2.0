@@ -7,7 +7,7 @@
         
         table {
             border-collapse: collapse;
-            width: 50vw; /* Largura do elemento em 60% da largura da viewport */
+            width: 50vw; /* Largura do elemento em 50% da largura da viewport */
             margin: 0 auto;
         }
         
@@ -46,14 +46,12 @@
 <body>
 
     <div class="center-content">
-        <h2 style="font-size: 2vw;">Comprovante de compra</h2>
+        <h2 class="comprovante-title">Comprovante de compra</h2>
     </div>
     
     <div class="center-content">
-        <p style="font-size: 1.5vw;">Colaborador: {{ nome_colaborador }}</p>
-        
+        <p class="content-cell">Colaborador: {{ colaborador_nome }}</p>
     </div>
-    
     
     <table>
         <thead>
@@ -62,22 +60,33 @@
                 <th style="text-align: left;">Preço</th>
             </tr>
         </thead>
-        <tbody>
-            {% for produto in produtos %}
-            <tr>
-                <td class="content-cell">{{ produto.nome }}</td>
-                <td class="content-cell">R$ {{ produto.preco_produto|floatformat:2 }}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td class="total content-cell" colspan="2">Valor total da compra: R$ {{ valor_total|floatformat:2 }}</td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <div class="center-content">
-        <p style="font-size: 1vw;">Data e hora da compra: {{ data_hora_compra }}</p>
-    </div>
-</body>
+     <tbody>
+    {% if produtos_ingresso %}
+    <tr>
+        <td colspan="2" style="text-align: center; font-weight: bold;">Ingressos</td>
+    </tr>
+    {% for produto in produtos_ingresso %}
+    <tr>
+        <td class="content-cell">{{ produto.nome }}</td>
+        <td class="content-cell">R$ {{ produto.preco_produto|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    {% if produtos_roupa %}
+    <tr>
+        <td colspan="2" style="text-align: center; font-weight: bold;">Produtos de Roupa</td>
+    </tr>
+    {% for produto in produtos_roupa %}
+    <tr>
+        <td class="content-cell">{{ produto.nome }}</td>
+        <td class="content-cell">R$ {{ produto.preco_produto|floatformat:2 }}</td>
+        
+    </tr>
+    {% endfor %}
+    {% endif %}
+    <tr>
+        <td class="total content-cell" colspan="2">Valor total da compra: R$ {{ preco_total|floatformat:2 }}</td>
+    </tr>
+</tbody>
 
 </html>

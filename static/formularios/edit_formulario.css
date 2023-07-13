@@ -27,7 +27,8 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
     border-radius: 18px;
-    transform: scale(1.0)
+    transform: scale(1.0);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 label {

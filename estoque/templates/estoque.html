@@ -1,108 +1,408 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+
 <head>
+  <title>Estoque</title>
+  <style>
+    body {
+      background-color: #f5f7ff !important; /* Cor de fundo desejada */
+    }
+
+    h1 {
+      margin-top: -70px !important;
+      font-size: 3rem !important;
+      margin-left: 250px !important
+    }
+    .container  {
+  max-width: 1420px !important;
+  margin: 0 auto !important;
+  padding: 10px !important;
+  overflow: auto !important;
+  margin-right: 130px !important; /* Adjust the value as needed */
+}
+
+
+
+
+.btn-aumentar-estoque i {
+  /* Estilos para o ícone dentro do botão */
+  color: #1d1b31; /* Cor do ícone */
+  font-size: 24px; /* Tamanho do ícone */
+}
+
+.btn-aumentar-estoque:hover i {
+  /* Estilos para o ícone dentro do botão quando o botão é hover */
+  color: #1a3065; /* Nova cor do ícone quando o botão é hover */
+  font-size: 24px; /* Novo tamanho do ícone quando o botão é hover */
+}
+
+
+
+.btn-icon-only {
+  background-color: black !important;
+  border: none ;
+  box-shadow: none ;
+  padding: 0 ;
+}
+
+.btn-space {
+  margin-right: 10px; /* Ajuste a margem conforme necessário */
+}
+
+
+
+.filter-row .filter-container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
+  margin-left: 240px !important;/* Ajuste o valor conforme necessário */
+}
+
+
+.search-input {
+  margin-top: 10px;
+}
+.filter-container label {
+  display: inline-block;
+  margin-top: 29px; /* Ajuste o valor conforme necessário */
+}
+
+
+.color-square {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+.red {
+  background-color: #ff7272;
+}
+
+.yellow {
+  background-color: #f9c57e;
+}
+
+
+  </style>
+
   <link rel="stylesheet" href="{% static 'formularios/lista_forms.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js"></script>
 
-  <title>Produtos em Estoque</title>
-  <!-- Adicione seus estilos CSS ou links para arquivos externos de CSS aqui -->
 </head>
-<body>
-  {% block content %}
-  <h2>Produtos em Estoque</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Produto</th>
-        <th>Quantidade</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for produto_estoque in produtos_estoque %}
-      <tr>
-        <td>{{ produto_estoque.produto }}</td>
-        <td id="quantidade-{{ produto_estoque.produto.id }}">{{ produto_estoque.quantidade }}</td>
-        <td>
-          <button class="btn btn-sm btn-primary btn-alterar-estoque" data-produto-id="{{ produto_estoque.produto.id }}">Alterar Estoque</button>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% endblock %}
 
-  <!-- Modal de Alteração de Estoque -->
-  <div class="modal fade" id="modalAlterarEstoque" tabindex="-1" role="dialog" aria-labelledby="modalAlterarEstoqueLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalAlterarEstoqueLabel">Alterar Estoque</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="formAlterarEstoque" method="POST" action="">
-            {% csrf_token %}
-            <div class="form-group">
-              <label for="novaQuantidade">Nova Quantidade:</label>
-              <input type="number" class="form-control" id="novaQuantidade" name="novo_valor" required>
+<div class="container">
+  <div class="image-container">
+      <img src="https://www.scivale.com.br/wp-content/uploads/2017/12/logo-sci.png">
+  </div>
+  <h1>Controle de estoque</h1>
+  <a href="{% url 'movimentacao_estoque' %}" class="create-link">
+     
+     controle de estoque
+  </a>
 
-            </div>
-            <input type="hidden" id="produtoId" name="produtoId" value="">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-          </form>
-        </div>
+  <div class="filter-row">
+      <div class="filter-container">
+        <label for="categoria-select"></label>
+        <select name="categoria" id="categoria-select">
+          <option value="">Todos</option>
+          <option value="alimentos">Alimentos</option>
+          <option value="bebidas">Bebidas</option>
+          <option value="roupa">Roupas</option>
+          <option value="ingresso">Ingressos</option>
+          <option value="outros">Outros</option>
+        </select>
+      </div>
+      <div class="search-form">
+        <input type="text" id="search-input" class="search-input" placeholder="Digite o nome do Produto">
+        <button type="button" id="search-button" class="search-button">
+          <i class="fas fa-search search-icon"></i>
+        </button>
+      </div>
+      
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Nível</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for produto_estoque in produtos_estoque %}
+          <tr data-categoria="{{ produto_estoque.categoria }}">
+            <td class="{% if produto_estoque.quantidade <= 3 %}border-left-red{% elif produto_estoque.quantidade <= 6 %}border-left-yellow{% else %}border-left-green{% endif %}">
+              {{ produto_estoque.produto }}
+            </td>
+            <td id="quantidade-{{ produto_estoque.produto.id }}">{{ produto_estoque.quantidade }}</td>
+            <td>
+              <span class="color-square {% if produto_estoque.quantidade <= 3 %}red{% elif produto_estoque.quantidade <= 6 %}yellow{% else %}orange{% endif %}"></span>
+              {% if produto_estoque.quantidade <= 3 %}
+                <span class="level-text">Muito Baixo</span>
+              {% elif produto_estoque.quantidade <= 6 %}
+                <span class="level-text">Baixo</span>
+              {% endif %}
+            </td>
+            <td>
+              <button class="btn btn-sm btn-aumentar-estoque" data-produto-id="{{ produto_estoque.produto.id }}">
+                <i class="fas fa-plus"></i>
+              </button>
+              <span class="btn-spaces"></span>
+              <button class="btn btn-sm btn-diminuir-estoque btn-icon-only {% if produto_estoque.quantidade > 0 %}btn-primary{% else %}btn-secondary{% endif %}" data-produto-id="{{ produto_estoque.produto.id }}">
+                <i class="fa fa-minus"></i>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    
+    <div class="button-container">
+      <button class="button" onclick="goBack()">Voltar</button>
+      <button class="button" onclick="goHome()">Home</button>
+    </div>
+    
+    
+    </div>
+    <div id="navbar">
+        {% include 'navBar.html' %}
+    </div>
+    
+        
+        
+      
+    
+     <!-- Modal de Aumentar Estoque -->
+<div class="modal fade" id="modalAumentarEstoque" tabindex="-1" role="dialog" aria-labelledby="modalAumentarEstoqueLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAumentarEstoqueLabel">Entrada Estoque</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formAumentarEstoque" method="POST" action="">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="novaQuantidadeAumentar">Nova Quantidade:</label>
+            <input type="number" class="form-control" id="novaQuantidadeAumentar" name="novaQuantidadeAumentar" required>
+          </div>
+          <input type="hidden" id="produtoIdAumentar" name="produtoIdAumentar" value="">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    $(document).ready(function() {
-      // Quando um botão de alteração de estoque for clicado, configure o evento click
-      $('.btn-alterar-estoque').click(function() {
-        var produtoId = $(this).data('produto-id');
-        var quantidade = $('#quantidade-' + produtoId).text();
-        $('#produtoId').val(produtoId);
-        $('#novaQuantidade').val(quantidade);
-        $('#modalAlterarEstoque').modal('show');
-      });
+      <!-- Modal de Diminuir Estoque -->
+      <div class="modal fade" id="modalDiminuirEstoque" tabindex="-1" role="dialog" aria-labelledby="modalDiminuirEstoqueLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalDiminuirEstoqueLabel">Baixa de Estoque</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+              <form id="formDiminuirEstoque" method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="novaQuantidadeDiminuir">Nova Quantidade:</label>
+                  <input type="number" class="form-control" id="novaQuantidadeDiminuir" name="novaQuantidadeDiminuir" required>
+                </div>
+                <input type="hidden" id="produtoIdDiminuir" name="produtoIdDiminuir" value="">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
 
-      // Quando o formulário for enviado, configure o evento submit
-      $('#formAlterarEstoque').submit(function(e) {
-        e.preventDefault();
-        var novaQuantidade = $('#novaQuantidade').val();
-        var produtoId = $('#produtoId').val();
-        var url = '/estoque/alterar/' + produtoId + '/';
-        
-        $.ajax({
-          type: 'POST',
-          url: url,
-          data: {
-            novaQuantidade: novaQuantidade,
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-          },
-          success: function(response) {
-            // Exiba uma mensagem de sucesso
-            alert(response);
-            // Atualize a quantidade exibida na tabela
-            $('#quantidade-' + produtoId).text(novaQuantidade);
-            // Feche o modal
-            $('#modalAlterarEstoque').modal('hide');
-          },
-          error: function(xhr) {
-            // Exiba uma mensagem de erro, se houver
-            alert(xhr.responseText);
-          }
-        });
+
+    <script>
+      function goBack() {
+        window.history.back(); // Volta para a página anterior
+      }
+
+      function goHome() {
+        window.location.href = "/"; // Redireciona para a página inicial
+      }
+    </script>
+
+    <div id="navbar">
+      {% include 'navBar.html' %}
+    </div>
+    <script>// Quando um botão de aumentar estoque for clicado, configure o evento click
+    // Quando um botão de aumentar estoque for clicado, configure o evento click
+$(document).on('click', '.btn-aumentar-estoque', function() {
+  var produtoId = $(this).data('produto-id');
+  $('#produtoIdAumentar').val(produtoId);
+  $('#novaQuantidadeAumentar').val(''); // Deixar o campo em branco
+  $('#modalAumentarEstoque').modal('show');
+});
+
+// Quando o formulário de aumentar estoque for enviado, configure o evento submit
+$(document).on('submit', '#formAumentarEstoque', function(e) {
+  e.preventDefault();
+  var novaQuantidade = $('#novaQuantidadeAumentar').val();
+  var produtoId = $('#produtoIdAumentar').val();
+  var estoqueAtual = parseInt($('#quantidade-' + produtoId).text());
+  var url = '/estoque/aumentar/' + produtoId + '/';
+
+  if (novaQuantidade > 0) {
+    // Enviar a requisição Ajax e atualizar os dados
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: {
+        novaQuantidade: novaQuantidade,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function(response) {
+        // Exibir uma mensagem de sucesso
+        alert(response);
+        // Atualizar a quantidade exibida na tabela
+        var quantidadeElement = $('#quantidade-' + produtoId);
+        var quantidadeAtual = parseInt(quantidadeElement.text());
+        var estoqueAtualizado = quantidadeAtual + parseInt(novaQuantidade);
+        quantidadeElement.text(estoqueAtualizado);
+        // Fechar o modal
+        $('#modalAumentarEstoque').modal('hide');
+      },
+      error: function(xhr) {
+        // Exibir uma mensagem de erro, se houver
+        alert(xhr.responseText);
+      }
+    });
+  } else {
+    // A nova quantidade é inválida, exibir uma mensagem de erro
+    alert('A nova quantidade deve ser maior do que zero.');
+  }
+});
+
+// Quando um botão de diminuir estoque for clicado, configure o evento click
+$(document).on('click', '.btn-diminuir-estoque', function() {
+  var produtoId = $(this).data('produto-id');
+  $('#produtoIdDiminuir').val(produtoId);
+  $('#novaQuantidadeDiminuir').val(''); // Deixar o campo em branco
+  $('#modalDiminuirEstoque').modal('show');
+});
+
+// Quando o formulário de diminuir estoque for enviado, configure o evento submit
+$(document).on('submit', '#formDiminuirEstoque', function(e) {
+  e.preventDefault();
+  var novaQuantidade = $('#novaQuantidadeDiminuir').val();
+  var produtoId = $('#produtoIdDiminuir').val();
+  var estoqueAtual = parseInt($('#quantidade-' + produtoId).text());
+  var url = '/estoque/diminuir/' + produtoId + '/';
+
+  if (parseInt(novaQuantidade) <= estoqueAtual) {
+    // Enviar a requisição Ajax e atualizar os dados
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: {
+        novaQuantidade: novaQuantidade,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function(response) {
+        // Exibir uma mensagem de sucesso
+        alert(response);
+        // Atualizar a quantidade exibida na tabela
+        var quantidadeElement = $('#quantidade-' + produtoId);
+        var quantidadeAtual = parseInt(quantidadeElement.text());
+        var estoqueAtualizado = quantidadeAtual - parseInt(novaQuantidade);
+        quantidadeElement.text(estoqueAtualizado);
+        // Fechar o modal
+        $('#modalDiminuirEstoque').modal('hide');
+      },
+      error: function(xhr) {
+        // Exibir uma mensagem de erro, se houver
+        alert(xhr.responseText);
+      }
+    });
+  } else {
+    // A nova quantidade é maior do que o estoque atual, exibir uma mensagem de erro
+    alert('A nova quantidade deve ser menor ou igual ao estoque atual.');
+  }
+});
+
+      
+    </script>
+      <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const searchInput = document.getElementById('search-input');
+                const searchButton = document.getElementById('search-button');
+
+                searchButton.addEventListener('click', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const tableRows = document.querySelectorAll('tbody tr');
+
+                    tableRows.forEach(row => {
+                        const name = row.querySelector('td:first-child').textContent.toLowerCase();
+                        if (name.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+
+                const icons = document.querySelectorAll('.show-icons');
+
+                icons.forEach(icon => {
+                    const editIcon = icon.querySelector('.edit-icon');
+
+                    icon.addEventListener('click', () => {
+                        editIcon.classList.toggle('active');
+                    });
+                });
+            });
+        </script>
+
+        <!-- Resto do seu código HTML -->
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const selectCategoria = document.getElementById('categoria-select');
+    const tableRows = document.querySelectorAll('tbody tr');
+
+    selectCategoria.addEventListener('change', () => {
+      const categoriaSelecionada = selectCategoria.value.toLowerCase();
+
+      tableRows.forEach(row => {
+        const categoriaProduto = row.dataset.categoria.toLowerCase();
+
+        if (categoriaSelecionada === '' || categoriaSelecionada === categoriaProduto) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
       });
     });
-  </script>
-  <!-- Adicione seus scripts JavaScript ou links para arquivos externos de JavaScript aqui -->
+  });
+</script>
+
+
+
+
+
+
+<!-- Resto do seu código HTML -->
+
+  </div>
 </body>
+
 </html>

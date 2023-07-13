@@ -11,6 +11,32 @@
     <title>Editar Colaborador</title>
     <link rel="stylesheet" href="{% static 'formularios/edit_formulario.css' %}">
     <meta name="autocomplete" content="off">
+
+
+    <Style>
+form {
+        width: 45% !important;
+        margin-top:  -100px !important;
+        /* Margem superior de 10px, margem inferior de 10px, centralizando verticalmente */
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        border-radius: 18px;
+        transform: scale(0.8)!important
+      }
+      .form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 2px !important;
+  font-size: 1.2rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+
+    </Style>
 </head>
 
 
@@ -93,11 +119,25 @@
 
             <input type="submit" value="Salvar" class="submit-button">
         </form>
+        <div class="button-container">
+            <button class="button" onclick="goBack()">Voltar</button>
+            <button class="button" onclick="goHome()">Home</button>
+        </div>
+    </div>
+    
         <div id="navbar">
             {% include 'navBar.html' %}
         </div>
     </div>
-
+    <script>
+        function goBack() {
+              window.history.back(); // Volta para a página anterior
+          }
+      
+          function goHome() {
+              window.location.href = "/"; // Redireciona para a página inicial
+          }
+         </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

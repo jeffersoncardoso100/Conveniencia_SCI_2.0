@@ -41,6 +41,7 @@ table {
   overflow: auto;
   max-height: 620px; /* Adjust the maximum height as needed */
   border-radius: 0 0 8px 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adicione esta linha para a sombra preta */
 }
 
 th {
@@ -63,16 +64,6 @@ td {
   
 }
 
-td .icon {
-  display: flex;
-  align-items: center;
-}
-
-td .edit-icon {
-  color: #155ba4;
-  font-size: 1.6rem;
-  margin-left: 10px;
-}
 
 td .show-icons {
   display: none;
@@ -118,7 +109,7 @@ td .situation-dot.inactive {
 }
 
 .search-input {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #6d6b6b;
   border-radius: 4px;
   width: 250px;
@@ -178,7 +169,7 @@ th:hover {
   display: flex;
   justify-content: center;
   margin-top: -2px;
-  background-color: #2d3560;
+  background-color: 0;
   padding: 10px;
 }
 
@@ -341,3 +332,158 @@ th:hover {
 .filter-container select:hover {
   border-color: #007bff;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+.modal-dialog {
+  max-width: 400px;
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.modal-title {
+  margin-bottom: 10px;
+}
+
+.modal-body {
+  padding: 20px 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+
+
+
+.create-link {
+  display: inline-block;
+  margin-right: 110px; /* Adicione a margem desejada */
+}
+
+.create-icon {
+  margin-right: 5px; /* Adicione a margem desejada */
+}
+
+.button-text {
+  vertical-align: middle; /* Ajuste a alinhamento vertical conforme necessário */
+}
+
+/*usuario*/
+.delete-button {
+  font-size:25px; /* Increase the font size */
+  padding: px px;
+  color: #1d1b31; /* Adjust the padding to make the button larger */
+}
+
+td .icon {
+  display: flex;
+  align-items: center;
+}
+
+td .edit-icon {
+  color: #1d1b31;
+  font-size:28px;
+  margin-left: 10px;
+}
+
+
+
+/*Colaboradores*/
+.edit-link {
+  display: inline-block;
+  padding: 1px 1px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  color: #333;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.edit-link:hover {
+  background-color: #ddd;
+}
+
+.edit-icon {
+  margin-right: 5px;
+}
+
+/* Se você quiser ajustar o tamanho do ícone, você pode usar a propriedade "font-size" */
+.edit-icon {
+  font-size: 6px;
+}
+
+.view-button {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #060606;
+  border: none;
+  border-radius: 4px;
+  color: #fff; /* Alterando para a cor branca */
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.view-button:hover {
+  background-color: #343131;
+}
+
+.view-icon {
+  margin-right: 5px;
+}
+
+.view-icon {
+  font-size: 16px;
+}
+
+
+
+.edit-link {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  color: #333;
+  text-decoration: none;
+  margin-right: 10px; /* Adicionando espaçamento à direita */
+}
+
+
+
+

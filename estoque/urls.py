@@ -9,6 +9,7 @@ from .views import estoque
 urlpatterns = [
     # Other URL patterns
     path('estoque/', estoque, name='estoque'),
-    path('estoque/alterar/<int:produto_id>/', views.alterar_estoque, name='alterar_estoque'),
-    path('controle_estoque/', views.controle_estoque, name='controle_estoque'),
+    path('estoque/aumentar/<int:produto_id>/', views.aumentar_estoque, name='aumentar_estoque'),
+    path('estoque/diminuir/<int:produto_id>/', views. diminuir_estoque, name='alterar_estoque'),
+    path('movimentacao-estoque/', views.movimentacao_estoque, name='movimentacao_estoque'),
 ]

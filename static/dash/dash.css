@@ -1,0 +1,220 @@
+       /* Estilos para o layout do grid */
+       .container {
+        max-width: 1000px;
+        margin: 20px auto;
+      
+    }
+    .container {
+max-width: 1400px; /* Defina a largura desejada */
+margin: 10px auto;
+margin-left: 150px;
+}
+
+    .grid {
+        display: grid;
+        grid-gap: 10px;
+    }
+
+    .widget {
+background-color: rgba(29, 27, 49, 0.8); /* Cor com transparência */
+color: #ffffff;
+padding: 10px;
+border-radius: 2px;
+box-shadow: 0 2px 4px rgba(255, 252, 252, 0.1);
+text-align: center;
+transition: background-color 0.3s;
+}
+
+
+    .widget:hover {
+        background-color: #505050;
+    }
+
+    .widget-title {
+        font-size: 24px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    .widget-content {
+        font-size: 20px;
+    }
+
+    .widget-icon {
+        font-size: 60px;
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+
+    /* Estilos para o tema dark */
+    body {
+        background-color: #2d3560;
+        color: #ffffff;
+    }
+
+
+    .content {
+        margin: 0 20px;
+    }
+
+    
+
+    .image-container {
+        text-align: center;
+        margin-bottom: -100px;
+    }
+
+    .image-container img {
+        max-width: 350px;
+        margin-top: 10px;
+        /* Ajuste o valor conforme necessário */
+    }
+
+    /* Estilos para as anotações manuais */
+    .notes-widget {
+        background-color: #191a1b;
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        grid-column: span 3;
+        color: #333;
+    }
+
+    .notes-widget textarea {
+        width: 90%;
+        height: 50px;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 4px;
+        border: none;
+        resize: none;
+    }
+
+    .notes-widget textarea {
+        font-size: 28px;
+        /* Defina o tamanho de fonte desejado */
+    }
+    .card-estoque-amarelo {
+background-color: #f5f7ff !important;
+border: 2px solid rgb(181, 174, 162) !important;
+border-radius: 8px;
+padding: 10px;
+color: #1d1b31;
+font-weight: bold;
+text-align: left;
+/* Outros estilos desejados */
+}
+
+.card-estoque-amarelo ul {
+list-style-type: none; /* Remover os pontos da lista */
+padding: 0; /* Remover o espaçamento interno da lista */
+margin: 0; /* Remover o espaçamento externo da lista */
+}
+
+.card-estoque-amarelo span {
+display: block;
+text-decoration: underline; /* Sublinhar o texto */
+margin-bottom: 10px;
+}.card-estoque-vermelho {
+background-color: #f5f7ff !important;
+border: 2px solid rgb(255, 255, 255) !important;
+border-radius: 8px;
+padding: 10px;
+color: #000; /* Altera a cor do texto para preto */
+font-weight: bold;
+text-align: left;
+max-width: 300px; /* Defina o valor desejado para a largura máxima */
+/* Outros estilos desejados */
+}
+
+.card-estoque-vermelho ul {
+list-style-type: none; /* Remover os pontos da lista */
+padding: 0; /* Remover o espaçamento interno da lista */
+margin: 0; /* Remover o espaçamento externo da lista */
+}
+
+.card-estoque-vermelho span {
+display: block;
+text-decoration: underline; /* Sublinhar o texto */
+margin-bottom: 10px;
+}
+
+
+.card-body {
+background-color: #f5f7ff;
+padding: 10px;
+color: #1d1b31;
+color: black;
+font-weight: bold;
+text-align: left;
+/* Outros estilos desejados */
+}
+
+
+.cards {
+    background-color: #1d1b31;
+    border: 1px solid #121212;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.card-headers {
+    background-color: #54585c;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 10px;
+    color: rgb(255, 255, 255);
+}
+
+.list-group-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.badge {
+    margin-right: 10px;
+}
+
+
+
+
+
+
+
+.card-grafico {
+border: 1px solid #ccc;
+border-radius: 5px;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+margin: 20px;
+max-width: 400px;
+}
+
+.card-grafico-header {
+background-color: #f8f9fa;
+border-bottom: 1px solid #ccc;
+font-weight: bold;
+padding: 10px;
+text-align: center;
+}
+
+.grafico {
+height: 300px;
+width: 100%;
+}
+.card-body {
+padding: 10px;
+color: black;
+}
+
+.card-body span {
+text-decoration: underline; /* Adicione esta linha para sublinhar o texto */
+}
+

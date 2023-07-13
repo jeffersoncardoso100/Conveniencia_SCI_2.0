@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     # ... outras URLs do seu projeto ...
     path('', views.login_usuario, name='login'),
-    path('home', views.home, name='home'),
+    
     path('logout/', views.logout_view, name='logout'),
     path('cadastrar_usuario/', views.cadastrar_usuario, name='cadastrar_usuario'),
     path('listar_usuario/', views.listar_usuarios, name='listar_usuarios'),

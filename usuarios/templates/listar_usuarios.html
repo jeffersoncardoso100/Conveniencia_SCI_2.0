@@ -28,9 +28,9 @@
         <h1>Usuários</h1>
         <a href="{% url 'cadastrar_usuario' %}" class="create-link">
             <i class="fas fa-user-plus create-icon"></i>
-            Criar Usuário
-        </a>
-
+            <span class="button-text">Criar Usuário</span>
+          </a>
+          
         <div class="search-form">
             <input type="text" id="search-input" class="search-input" placeholder="Digite o nome do usuário">
             <button type="button" id="search-button" class="search-button">
@@ -58,15 +58,17 @@
                                         onsubmit="return confirm('Tem certeza que deseja excluir este usuário?')">
                                         {% csrf_token %}
                                         <button type="submit" class="delete-button">
-                                            <i class="fas fa-trash delete-icon"></i>
+                                            <i class="fas fa-trash-alt delete-icon"></i>   
+                                        </a>
                                         </button>
                                     </form>
                                 </span>
-                                <span>
-                                    <a href="{% url 'editar_usuario' usuario.id %}" class="edit-link">
-                                        <i class="fas fa-pencil-alt edit-icon"></i>
-                                    </a>
-                                </span>
+                               
+<span>
+    <a href="{% url 'editar_usuario' usuario.id %}" class="edit-link">
+        <i class="fas fa-pencil-alt edit-icon"></i>
+    </a>
+</span>
                             </div>
                         </td>
                     </tr>

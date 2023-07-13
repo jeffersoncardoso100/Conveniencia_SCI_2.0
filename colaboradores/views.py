@@ -7,11 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.validators import EmailValidator
-from django.core.exceptions import ValidationError
 
 
 @login_required(login_url='login')
-
 def criar_colaboradores(request):
     if request.method == 'POST':
         form = CadastrarColaboradorForm(request.POST)
@@ -26,7 +24,8 @@ def criar_colaboradores(request):
 
             # Check if password and confirmation match
             if senha != confirmar_senha:
-                messages.error(request, 'A senha e a confirmação de senha não correspondem.')
+                messages.error(
+                    request, 'A senha e a confirmação de senha não correspondem.')
                 return redirect('criar_colaboradores')
 
             # Check if CPF or login already exists
@@ -65,7 +64,8 @@ def criar_colaboradores(request):
                 error_message = "Erro de validação: " + str(e)
                 return render(request, 'error.html', {'error_message': error_message})
             except Exception as e:
-                error_message = "Ocorreu um erro ao criar o colaborador. Detalhes: " + str(e)
+                error_message = "Ocorreu um erro ao criar o colaborador. Detalhes: " + \
+                    str(e)
                 logging.exception(error_message)
                 return render(request, 'error.html', {'error_message': error_message})
     else:
@@ -74,21 +74,17 @@ def criar_colaboradores(request):
     return render(request, 'cadastro_colaborador.html', {'form': form})
 
 
-
 @login_required(login_url='login')
 def listar_colaboradores(request):
     colaboradores = Colaborador.objects.all()
-    
-        
+
     return render(request, 'listar_colaborador.html', {'colaboradores': colaboradores})
-
-
 
 
 @login_required
 def visualizar_colaborador(request, colaborador_id):
     colaborador = get_object_or_404(Colaborador, id=colaborador_id)
-    
+
     return render(request, 'visualizar_colab.html', {'colaborador': colaborador})
 
 
@@ -116,7 +112,8 @@ def editar_colaborador(request, colaborador_id):
                 return redirect('editar_colaborador', colaborador_id=colaborador_id)
 
             if senha != confirmar_senha:
-                messages.error(request, 'A senha e a confirmação de senha não correspondem.')
+                messages.error(
+                    request, 'A senha e a confirmação de senha não correspondem.')
                 return redirect('editar_colaborador', colaborador_id=colaborador_id)
 
             # Rest of your code for updating the collaborator
@@ -145,7 +142,8 @@ def editar_colaborador(request, colaborador_id):
                 error_message = "Erro de validação: " + str(e)
                 return render(request, 'error.html', {'error_message': error_message})
             except Exception as e:
-                error_message = "Ocorreu um erro ao editar o colaborador. Detalhes: " + str(e)
+                error_message = "Ocorreu um erro ao editar o colaborador. Detalhes: " + \
+                    str(e)
                 logging.exception(error_message)
                 return render(request, 'error.html', {'error_message': error_message})
     else:
@@ -155,7 +153,8 @@ def editar_colaborador(request, colaborador_id):
             'confirmar_senha': '',
             'email': colaborador.email
         }
-        form = EditarColaboradorForm(instance=colaborador, initial=initial_data)
+        form = EditarColaboradorForm(
+            instance=colaborador, initial=initial_data)
 
         # Define the option selected in the 'situacao' field based on the current collaborator's situation
         form.fields['situacao'].initial = colaborador.situacao
